@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: radial-gradient(circle, #111, #000);
+  color: white;
+  text-align: center;
+}
+
+#ui {
+  padding: 10px;
+}
+
+button {
+  background: #00ffff;
+  border: none;
+  padding: 10px 30px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+canvas {
+  display: block;
+  margin: 10px auto;
+  background: #111;
+  border: 2px solid #00ffff;
+}
