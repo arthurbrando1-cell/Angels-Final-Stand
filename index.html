@@ -1,20 +1,295 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Angel's Final Stand</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mural de Scripts Privado e Seguro</title>
+    <style>
+        /* CSS para Tema Preto e Branco e Animações */
+        :root {
+            --bg-dark: #121212;
+            --bg-medium: #1f1f1f;
+            --text-light: #f0f0f0;
+            --highlight: #a0a0a0;
+            --border-color: #333;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Consolas', monospace;
+            padding: 40px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { color: #fff; border-bottom: 2px solid var(--highlight); padding-bottom: 10px; }
+        
+        /* --- Mural de Scripts --- */
+        #mural {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .script-card {
+            background-color: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease-out, border-color 0.3s;
+        }
+
+        .script-card:hover {
+            transform: translateY(-8px); 
+            border-color: var(--text-light);
+        }
+
+        .code-box {
+            position: relative;
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            border: 1px dashed var(--highlight);
+            transition: background-color 0.2s;
+        }
+        
+        .code-box:hover { background-color: #3a3a3a; }
+
+        /* --- Modal de Login (Para acessar funções de Admin) --- */
+        #loginModal, #postFormModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--bg-medium);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: fadeIn 0.3s;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content input, .modal-content textarea, .modal-content button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            border-radius: 4px;
+        }
+        
+        .modal-content button {
+            background-color: var(--highlight);
+            color: var(--bg-dark);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-content button:hover { background-color: #ffffff; }
+
+        /* --- Estilo do Formulário de Postagem --- */
+        #postForm label { display: block; text-align: left; margin-top: 10px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    </style>
 </head>
 <body>
 
-<div id="ui">
-  <h1>Angel's Final Stand</h1>
-  <button id="startBtn">JOGAR</button>
-  <p id="info">WASD ou Setas para mover</p>
-</div>
+    <h1>🚀 Meu Mural de Scripts Privado</h1>
+    <p>Clique no botão abaixo para tentar postar um novo script.</p>
+    
+    <button onclick="openLoginModal()" 
+            style="background-color: #444; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 30px;">
+        Acessar Funções de Admin
+    </button>
 
-<canvas id="game" width="900" height="600"></canvas>
+    <div id="mural">
+        <div class="script-card">
+            <h3>Exemplo Inicial</h3>
+            <p>Este script é apenas um placeholder. O conteúdo real virá do seu banco de dados!</p>
+            <div class="code-box" onclick="copyToClipboard(this)">
+                // Seu código de exemplo
+                function init() {
+                  console.log('Mural carregado!');
+                }
+            </div>
+        </div>
+    </div>
 
-<script src="game.js"></script>
+    <div id="loginModal">
+        <div class="modal-content">
+            <h2>🔐 Acesso de Administrador</h2>
+            <p>Insira suas credenciais:</p>
+            <input type="password" id="loginPassword" placeholder="Sua Senha" required>
+            <button onclick="handleLogin()">Login Seguro</button>
+            <p style="font-size: 12px; color: #888;">A tecla ESC fecha este modal.</p>
+        </div>
+    </div>
+
+    <div id="postFormModal">
+        <div class="modal-content">
+            <h2>✨ Novo Script</h2>
+            <form id="postForm" onsubmit="handlePost(event)">
+                
+                <label for="scriptName">Nome do Script:</label>
+                <input type="text" id="scriptName" required>
+
+                <label for="scriptDesc">Descrição:</label>
+                <textarea id="scriptDesc" rows="3" required></textarea>
+
+                <label for="scriptImage">Foto/Miniatura:</label>
+                <input type="file" id="scriptImage" accept="image/*" required>
+                
+                <label for="scriptCode">Código (o que será copiado):</label>
+                <textarea id="scriptCode" rows="6" placeholder="Cole seu código aqui..." required></textarea>
+
+                <button type="submit">Postar Script com Segurança</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- Endereço do seu Backend (VOCÊ DEVE MUDAR ISTO) ---
+        const BACKEND_URL = 'http://localhost:3000/api'; 
+        let adminToken = null; // Armazenará seu token de sessão seguro.
+
+        // --- 1. Funcionalidade de Cópia (igual ao anterior) ---
+        function copyToClipboard(element) {
+            const codeText = element.textContent.replace('Clique para copiar', '').trim();
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('✅ Código copiado!');
+            } catch (err) {
+                alert('❌ Falha ao copiar o código.');
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        // --- 2. Controle de Modals e Login ---
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeModals() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('postFormModal').style.display = 'none';
+        }
+
+        // Fecha modais com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModals();
+            }
+        });
+
+        // --- 3. Acesso Admin Seguro (Handle Login) ---
+        async function handleLogin() {
+            const password = document.getElementById('loginPassword').value;
+
+            // ESTE É O PONTO CRÍTICO DE SEGURANÇA: Comunicação com o Servidor
+            try {
+                const response = await fetch(`${BACKEND_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    adminToken = data.token; // Salva o token de acesso seguro!
+                    
+                    // Guarda o token no armazenamento do navegador (bom para manter logado)
+                    localStorage.setItem('adminToken', adminToken); 
+                    
+                    alert('🔑 Login de Administrador bem-sucedido! Abrindo formulário de postagem.');
+                    closeModals();
+                    document.getElementById('postFormModal').style.display = 'flex'; // Abre o formulário
+                } else {
+                    alert('🚫 Credenciais inválidas. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro de conexão ou servidor:', error);
+                alert('Erro ao tentar conectar com o servidor.');
+            }
+        }
+
+        // --- 4. Postagem Segura (Handle Post) ---
+        async function handlePost(event) {
+            event.preventDefault();
+            
+            // Certifique-se de que o token existe
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                alert('Sua sessão expirou. Faça login novamente.');
+                openLoginModal();
+                return;
+            }
+
+            const formData = new FormData(event.target);
+            formData.append('name', document.getElementById('scriptName').value);
+            formData.append('description', document.getElementById('scriptDesc').value);
+            formData.append('code', document.getElementById('scriptCode').value);
+            
+            // A imagem é adicionada automaticamente pelo input[type="file"]
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/post`, {
+                    method: 'POST',
+                    // Não defina Content-Type ao usar FormData, o navegador faz isso automaticamente
+                    headers: { 
+                        'Authorization': `Bearer ${token}` // ENVIA O TOKEN SEGURO!
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('✅ Script postado com sucesso!');
+                    closeModals();
+                    event.target.reset(); // Limpa o formulário
+                    // Aqui você chamaria a função para recarregar o mural.
+                } else if (response.status === 401) {
+                    alert('Sessão inválida. Você não tem permissão para postar.');
+                    openLoginModal();
+                } else {
+                    alert('❌ Erro ao postar script no servidor.');
+                }
+            } catch (error) {
+                console.error('Erro ao enviar postagem:', error);
+                alert('Falha na comunicação com o servidor.');
+            }
+        }
+        
+        // --- 5. Tenta restaurar o Token ao carregar a página (opcional) ---
+        // adminToken = localStorage.getItem('adminToken'); // Descomentar se quiser manter o usuário 'logado'
+    </script>
 </body>
 </html>
