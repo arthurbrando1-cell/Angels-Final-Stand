@@ -1,307 +1,261 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamedevspace | Natal Edition 🎄</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamedevspace | Natal Edition 🎄</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
-    :root {
-        --primary: #ff2e40; --primary-glow: rgba(255, 46, 64, 0.5);
-        --secondary: #00ff9c; --gold: #ffd700; --bg-dark: #020205;
-        --bg-card: rgba(20, 20, 25, 0.7); --glass: rgba(255, 255, 255, 0.08);
-        --border: rgba(255, 255, 255, 0.15); --text-main: #ffffff;
-        --text-muted: #b0b0bb; --radius: 16px; --ease: cubic-bezier(0.23, 1, 0.32, 1);
-    }
+:root {
+    --primary: #ff2e40; --primary-glow: rgba(255, 46, 64, 0.5);
+    --secondary: #00ff9c; --gold: #ffd700; --bg-dark: #020205;
+    --bg-card: rgba(20, 20, 25, 0.7); --glass: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.15); --text-main: #ffffff;
+    --text-muted: #b0b0bb; --radius: 16px; --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
 
-    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-    body {
-        margin: 0; font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-dark);
-        background-image: radial-gradient(circle at 10% 10%, rgba(255, 46, 64, 0.15), transparent 30%), radial-gradient(circle at 90% 90%, rgba(0, 255, 156, 0.08), transparent 30%);
-        min-height: 100vh; overflow-x: hidden;
-    }
+* { box-sizing: border-box; outline: none; }
+body {
+    margin: 0; font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 10% 10%, rgba(255, 46, 64, 0.15), transparent 30%), radial-gradient(circle at 90% 90%, rgba(0, 255, 156, 0.08), transparent 30%);
+    min-height: 100vh; overflow-x: hidden; position: relative;
+}
 
-    /* LOADING SCREEN */
-    #loading { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: 0.5s; }
-    .loader { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: rot 1s linear infinite; }
-    @keyframes rot { 100% { transform: rotate(360deg); } }
+/* SISTEMA DE NEVE */
+#snow-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.snowflake { position: absolute; top: -10px; color: #fff; opacity: 0.8; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(105vh); } }
 
-    /* HEADER & UI */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 0 5%; height: 80px; background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-    .brand { font-weight: 900; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
-    .brand span { color: var(--primary); }
-    .nav-actions { display: flex; gap: 12px; align-items: center; }
-    
-    .btn-primary { background: var(--primary); color: #fff; border: none; padding: 10px 20px; border-radius: 99px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--primary-glow); }
+/* LOADING */
+#loading { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: 0.5s; }
+.loader { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: rot 1s linear infinite; }
+@keyframes rot { 100% { transform: rotate(360deg); } }
 
-    .user-pill { display: flex; align-items: center; gap: 10px; padding: 5px 15px 5px 5px; background: var(--glass); border: 1px solid var(--border); border-radius: 99px; cursor: pointer; }
-    .avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #222; }
+/* HEADER ORIGINAL */
+header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; height: 80px; background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.brand { font-weight: 900; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; color: #fff; }
+.brand span { color: var(--primary); }
 
-    /* GRID */
-    .main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px 5%; }
-    .game-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
-    .game-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-    .card-img { width: 100%; height: 180px; object-fit: cover; }
-    .card-body { padding: 15px; }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+.btn-primary { background: linear-gradient(135deg, var(--primary), #d61c2e); color: #fff; font-weight: 700; padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+.user-pill { display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; background: var(--glass); border: 1px solid var(--border); border-radius: 99px; cursor: pointer; position: relative; }
+.user-pill::after { content: '🎅'; position: absolute; top: -12px; left: -5px; font-size: 1.2rem; transform: rotate(-15deg); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #222; }
 
-    /* MODALS */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: none; place-items: center; padding: 20px; overflow-y: auto; }
-    .modal-box { background: #111; border: 1px solid var(--border); width: 100%; max-width: 450px; padding: 30px; border-radius: 24px; }
-    .form-input { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin-bottom: 15px; font-family: inherit; }
-    
-    .upload-area { border: 2px dashed var(--border); padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
-    .upload-area:hover { border-color: var(--secondary); background: rgba(0,255,156,0.05); }
-    input[type="file"] { display: none; }
+/* MODALS DESIGN ORIGINAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 2000; display: none; place-items: center; opacity: 0; transition: 0.3s; overflow-y: auto; }
+.modal-overlay.open { opacity: 1; display: grid; }
+.modal-box { background: #111; border: 1px solid var(--border); width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; position: relative; }
+.form-input { width: 100%; padding: 14px; background: #050505; border: 1px solid var(--border); border-radius: 12px; color: #fff; margin-bottom: 15px; }
 
-    .profile-banner { width: 100%; height: 100px; border-radius: 12px; object-fit: cover; background: #222; margin-bottom: 10px; border: 1px solid var(--border); }
+/* NOVOS ESTILOS DE UPLOAD */
+.upload-btn { background: rgba(255,255,255,0.05); border: 1px dashed var(--border); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 15px; font-size: 0.8rem; display: block; }
+.upload-btn:hover { border-color: var(--secondary); }
+.profile-banner-preview { width: 100%; height: 80px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; background: #222; border: 1px solid var(--border); }
 
-    /* PLAYER */
-    .game-player { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
-    .player-header { height: 60px; background: #111; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
-    iframe { flex: 1; border: none; width: 100%; height: 100%; }
+/* GRID ORIGINAL */
+.main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px 5%; }
+.game-card { background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: 0.4s; cursor: pointer; }
+.game-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+.card-img-box { height: 180px; overflow: hidden; position: relative; }
+.card-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.card-content { padding: 18px; }
 
-    #snow-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-    .snowflake { position: absolute; top: -10px; color: #fff; animation: fall linear forwards; }
+/* PLAYER */
+.game-player { position: fixed; inset: 0; z-index: 3000; background: #000; display: none; flex-direction: column; }
+.player-bar { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: #111; }
+iframe { flex: 1; border: none; background: #000; }
 </style>
 </head>
 <body>
 
-<div id="loading"><div class="loader"></div><p>Sincronizando com o Papai Noel...</p></div>
+<div id="loading"><div class="loader"></div><p>CARREGANDO O NATAL...</p></div>
 <div id="snow-container"></div>
-<div id="toast-container"></div>
 
 <header>
     <div class="brand"><i data-lucide="gift"></i> Gamedevspace<span>.Cloud</span></div>
     <div class="nav-actions">
-        <button class="btn-primary" onclick="openModal('postModal')"><i data-lucide="plus"></i> POSTAR</button>
-        <div class="user-pill" onclick="openModal('profileModal')">
-            <img id="userAvatar" class="avatar" src="https://ui-avatars.com/api/?name=Guest">
-            <span id="navUserName">Entrar</span>
+        <button class="btn-primary" onclick="openModal('postModal')"><i data-lucide="plus-circle"></i> POSTAR</button>
+        <div class="user-pill" id="userBtn" onclick="openModal('profileModal')">
+            <img id="navAvatar" class="avatar" src="https://ui-avatars.com/api/?name=Guest">
+            <span id="navName">Login</span>
         </div>
     </div>
 </header>
 
-<div class="main-grid" id="gameGrid"></div>
+<div class="main-grid" id="grid"></div>
 
 <div class="modal-overlay" id="postModal" onclick="closeOnOverlay(event, this)">
     <div class="modal-box">
-        <h2 style="margin-top:0">🎁 Publicar Jogo</h2>
+        <h2 style="text-align:center">Novo Jogo 🎁</h2>
         <input id="gTitle" class="form-input" placeholder="Nome do Jogo">
         
-        <label class="upload-area" for="fileGame">
-            <i data-lucide="file-code"></i><br>Subir HTML/JS (Base64)
-            <input type="file" id="fileGame" accept=".html,.js" onchange="handleFileUpload(this, 'gUrl')">
+        <label class="upload-btn">
+            <i data-lucide="file-code"></i> Subir HTML/JS (Base64)
+            <input type="file" hidden accept=".html,.js" onchange="toBase64(this, 'gUrl')">
         </label>
-        <input id="gUrl" class="form-input" placeholder="Ou cole a URL do Iframe">
+        <input id="gUrl" class="form-input" placeholder="URL do Jogo ou Base64">
 
-        <label class="upload-area" for="fileThumb">
-            <i data-lucide="image"></i><br>Subir Capa do Jogo
-            <input type="file" id="fileThumb" accept="image/*" onchange="handleFileUpload(this, 'gImg')">
+        <label class="upload-btn">
+            <i data-lucide="image"></i> Subir Capa do Jogo
+            <input type="file" hidden accept="image/*" onchange="toBase64(this, 'gImg')">
         </label>
-        <input id="gImg" class="form-input" placeholder="Ou cole URL da imagem">
+        <input id="gImg" class="form-input" placeholder="URL da Capa">
 
         <select id="gCat" class="form-input">
             <option>Natal 🎄</option><option>Ação</option><option>RPG</option><option>Terror</option>
         </select>
-        <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveGame()">PUBLICAR</button>
+        <button class="btn-primary" style="width:100%; justify-content:center" onclick="publishGame()">Publicar</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="profileModal" onclick="closeOnOverlay(event, this)">
     <div class="modal-box">
-        <div id="authSection">
-            <h2>🎅 Acesso</h2>
-            <input id="loginNick" class="form-input" placeholder="Seu Nickname">
-            <button class="btn-primary" style="width:100%; justify-content:center" onclick="login()">ENTRAR</button>
+        <div id="loginView">
+            <h2 style="text-align:center">Acesso 🎅</h2>
+            <input id="nickInput" class="form-input" placeholder="Nickname">
+            <button class="btn-primary" style="width:100%; justify-content:center" onclick="doLogin()">Entrar</button>
         </div>
-        <div id="userSection" style="display:none">
-            <img id="pBannerPreview" class="profile-banner" src="">
-            <h2 id="pNickTitle" style="margin: 0 0 15px 0">Nick</h2>
+        <div id="profileView" style="display:none">
+            <img id="prevBanner" class="profile-banner-preview" src="">
+            <h2 id="viewNick" style="margin-top:0">Nick</h2>
             
-            <p style="font-size:0.8rem; color:var(--text-muted)">Foto de Perfil (URL ou Upload):</p>
-            <input id="pAvatarInput" class="form-input" placeholder="URL da Foto/GIF">
-            <input type="file" id="fAvatar" accept="image/*" onchange="handleFileUpload(this, 'pAvatarInput')">
-            <button class="btn-primary" style="margin-bottom:10px; font-size:0.8rem" onclick="document.getElementById('fAvatar').click()">Upload Foto</button>
-
-            <p style="font-size:0.8rem; color:var(--text-muted)">Banner (URL ou Upload):</p>
-            <input id="pBannerInput" class="form-input" placeholder="URL do Banner/GIF">
-            <input type="file" id="fBanner" accept="image/*" onchange="handleFileUpload(this, 'pBannerInput')">
-            <button class="btn-primary" style="margin-bottom:20px; font-size:0.8rem" onclick="document.getElementById('fBanner').click()">Upload Banner</button>
-
-            <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveProfile()">SALVAR ALTERAÇÕES</button>
-            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; margin-top:15px; width:100%">Sair da conta</button>
+            <label class="upload-btn">Subir Foto (ou GIF) <input type="file" hidden onchange="toBase64(this, 'pAv')"></label>
+            <input id="pAv" class="form-input" placeholder="URL Foto/GIF">
+            
+            <label class="upload-btn">Subir Banner (ou GIF) <input type="file" hidden onchange="toBase64(this, 'pBan')"></label>
+            <input id="pBan" class="form-input" placeholder="URL Banner/GIF">
+            
+            <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveProfile()">Salvar</button>
+            <button onclick="doLogout()" style="width:100%; background:none; border:none; color:#ff2e40; margin-top:15px; cursor:pointer">Sair</button>
         </div>
     </div>
 </div>
 
-<div class="game-player" id="gamePlayer">
-    <div class="player-header">
-        <button onclick="closePlayer()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="x"></i></button>
-        <span id="playingTitle">Jogo</span>
-        <div style="width:24px"></div>
+<div class="game-player" id="player">
+    <div class="player-bar">
+        <button onclick="closeGame()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="arrow-left"></i></button>
+        <span id="pTitle">Jogo</span>
+        <div style="width:30px"></div>
     </div>
     <iframe id="gameFrame"></iframe>
 </div>
 
 <script>
-// --- CONFIGURAÇÃO FIREBASE ---
-const firebaseConfig = { 
-    apiKey: "SUA_API_KEY_AQUI", 
-    authDomain: "gamehub-b8338.firebaseapp.com", 
-    projectId: "gamehub-b8338" 
-};
+// CONFIG FIREBASE (Preencha para funcionar)
+const firebaseConfig = { apiKey: "", authDomain: "gamehub-b8338.firebaseapp.com", projectId: "gamehub-b8338" };
 if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let currentUser = JSON.parse(localStorage.getItem("gs_user")) || null;
+let user = JSON.parse(localStorage.getItem("gs_user")) || null;
 
-// --- INICIALIZAÇÃO ---
 window.onload = () => {
     lucide.createIcons();
-    updateUI();
     loadGames();
+    updateUI();
     startSnow();
-    
-    // REMOVE O LOADING MESMO SE O FIREBASE TRAVAR
-    setTimeout(() => {
-        document.getElementById('loading').style.opacity = '0';
-        setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
-    }, 1500);
+    // Força saída do loading
+    setTimeout(() => { document.getElementById('loading').style.display = 'none'; }, 1500);
 };
 
-// --- FUNÇÕES DE ARQUIVO (BASE64) ---
-function handleFileUpload(input, targetId) {
+// --- BASE 64 ---
+function toBase64(input, target) {
     const file = input.files[0];
-    if(!file) return;
-    if(file.size > 1048487) return alert("Arquivo muito grande! Máximo 1MB.");
-
     const reader = new FileReader();
-    reader.onload = (e) => {
-        document.getElementById(targetId).value = e.target.result;
-        if(targetId === 'pBannerInput') document.getElementById('pBannerPreview').src = e.target.result;
+    reader.onloadend = () => {
+        document.getElementById(target).value = reader.result;
+        if(target === 'pBan') prevBanner.src = reader.result;
     };
     reader.readAsDataURL(file);
 }
 
-// --- AUTH & PERFIL ---
-function login() {
-    const nick = loginNick.value.trim();
-    if(!nick) return;
-    
-    // Busca dados no Firestore
-    db.collection("users").doc(nick).get().then(doc => {
-        if(doc.exists) {
-            currentUser = doc.data();
-        } else {
-            currentUser = { nick, avatar: "", banner: "", role: "user" };
-        }
-        localStorage.setItem("gs_user", JSON.stringify(currentUser));
+// --- LOGIN & PERFIL ---
+function doLogin() {
+    const n = nickInput.value.trim();
+    if(!n) return;
+    db.collection("users").doc(n).get().then(doc => {
+        user = doc.exists ? doc.data() : { nick: n, avatar: "", banner: "" };
+        localStorage.setItem("gs_user", JSON.stringify(user));
         updateUI();
-        closeModals();
     });
 }
 
 function saveProfile() {
-    currentUser.avatar = pAvatarInput.value;
-    currentUser.banner = pBannerInput.value;
-    
-    db.collection("users").doc(currentUser.nick).set(currentUser).then(() => {
-        localStorage.setItem("gs_user", JSON.stringify(currentUser));
+    user.avatar = pAv.value;
+    user.banner = pBan.value;
+    db.collection("users").doc(user.nick).set(user).then(() => {
+        localStorage.setItem("gs_user", JSON.stringify(user));
         updateUI();
-        alert("Perfil salvo!");
         closeModals();
     });
 }
 
-function logout() {
-    localStorage.removeItem("gs_user");
-    currentUser = null;
-    location.reload();
-}
+function doLogout() { localStorage.removeItem("gs_user"); location.reload(); }
 
 function updateUI() {
-    if(currentUser) {
-        navUserName.innerText = currentUser.nick;
-        userAvatar.src = currentUser.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.nick}`;
-        authSection.style.display = 'none';
-        userSection.style.display = 'block';
-        pNickTitle.innerText = currentUser.nick;
-        pAvatarInput.value = currentUser.avatar;
-        pBannerInput.value = currentUser.banner;
-        pBannerPreview.src = currentUser.banner;
+    if(user) {
+        navName.innerText = user.nick;
+        navAvatar.src = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nick}`;
+        loginView.style.display = 'none';
+        profileView.style.display = 'block';
+        viewNick.innerText = user.nick;
+        pAv.value = user.avatar;
+        pBan.value = user.banner;
+        prevBanner.src = user.banner;
     }
 }
 
 // --- JOGOS ---
-function saveGame() {
-    if(!currentUser) return alert("Faça login primeiro!");
-    const game = {
-        title: gTitle.value,
-        url: gUrl.value,
-        img: gImg.value,
-        category: gCat.value,
-        author: currentUser.nick,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    db.collection("games").add(game).then(() => {
-        alert("Jogo postado!");
-        closeModals();
-    }).catch(e => alert("Erro ao postar. Verifique se o arquivo não é muito grande."));
+function publishGame() {
+    if(!user) return alert("Logue primeiro!");
+    db.collection("games").add({
+        title: gTitle.value, url: gUrl.value, img: gImg.value, category: gCat.value,
+        likes: 0, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => { closeModals(); alert("Postado!"); });
 }
 
 function loadGames() {
     db.collection("games").orderBy("createdAt", "desc").onSnapshot(snap => {
-        gameGrid.innerHTML = "";
+        grid.innerHTML = "";
         snap.forEach(doc => {
             const g = doc.data();
-            const card = document.createElement('div');
-            card.className = "game-card";
-            card.onclick = () => openPlayer(g.url, g.title);
-            card.innerHTML = `
-                <img class="card-img" src="${g.img || 'https://placehold.co/400x200?text=Sem+Capa'}">
-                <div class="card-body">
-                    <div style="font-weight:700">${g.title}</div>
-                    <div style="font-size:0.8rem; color:var(--text-muted)">${g.category}</div>
-                </div>
-            `;
-            gameGrid.appendChild(card);
+            grid.innerHTML += `
+                <div class="game-card" onclick="openGame('${g.url}', '${g.title}')">
+                    <div class="card-img-box"><img src="${g.img}"></div>
+                    <div class="card-content">
+                        <div style="font-weight:700">${g.title}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted)">${g.category}</div>
+                    </div>
+                </div>`;
         });
     });
 }
 
-// --- PLAYER ---
-function openPlayer(url, title) {
-    gamePlayer.style.display = 'flex';
+function openGame(url, title) {
+    player.style.display = 'flex';
     gameFrame.src = url;
-    playingTitle.innerText = title;
+    pTitle.innerText = title;
 }
-function closePlayer() {
-    gamePlayer.style.display = 'none';
-    gameFrame.src = "";
-}
+function closeGame() { player.style.display = 'none'; gameFrame.src = ""; }
 
 // --- UTILS ---
-function openModal(id) { document.getElementById(id).style.display = 'grid'; }
-function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
 function closeOnOverlay(e, el) { if(e.target === el) closeModals(); }
 
 function startSnow() {
-    const container = document.getElementById('snow-container');
-    setInterval(() => {
-        const flake = document.createElement('div');
-        flake.className = "snowflake";
-        flake.innerText = "❄";
-        flake.style.left = Math.random() * 100 + "vw";
-        flake.style.animationDuration = (Math.random() * 3 + 2) + "s";
-        container.appendChild(flake);
-        setTimeout(() => flake.remove(), 5000);
-    }, 200);
+    const sc = document.getElementById('snow-container');
+    for(let i=0; i<30; i++) {
+        const f = document.createElement('div');
+        f.className = 'snowflake'; f.innerText = '❄';
+        f.style.left = Math.random() * 100 + 'vw';
+        f.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        sc.appendChild(f);
+    }
 }
 </script>
 </body>
