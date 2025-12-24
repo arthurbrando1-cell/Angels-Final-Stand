@@ -30,11 +30,6 @@
         .snowflake { position: absolute; top: -10px; color: #fff; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* LOADING */
-        #loading { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: 0.5s; }
-        .loader { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: rot 1s linear infinite; }
-        @keyframes rot { 100% { transform: rotate(360deg); } }
-
         /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; height: 80px; background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
         .brand { font-weight: 900; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; }
@@ -42,38 +37,38 @@
 
         .nav-actions { display: flex; gap: 10px; align-items: center; }
         .btn-primary { background: linear-gradient(135deg, var(--primary), #d61c2e); color: #fff; font-weight: 700; padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        
+        /* USER PILL COM GIF SUPORT */
         .user-pill { display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; background: var(--glass); border: 1px solid var(--border); border-radius: 99px; cursor: pointer; position: relative; }
         .user-pill::after { content: '🎅'; position: absolute; top: -12px; left: -5px; font-size: 1.2rem; transform: rotate(-15deg); }
-        .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #222; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #222; border: 1px solid var(--primary); }
 
-        /* GRID */
+        /* BIBLIOTECA GRID */
         .main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px 5%; }
         .game-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
         .game-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px var(--primary-glow); }
         .card-img { width: 100%; height: 160px; object-fit: cover; }
         .card-body { padding: 15px; }
 
-        /* MODALS */
+        /* MODAIS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 2000; display: none; place-items: center; overflow-y: auto; padding: 20px; }
         .modal-box { background: #111; border: 1px solid var(--border); width: 100%; max-width: 450px; padding: 30px; border-radius: 24px; }
         .form-input { width: 100%; padding: 12px; background: #050505; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin-bottom: 15px; }
-        .profile-banner { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: #222; }
+        .profile-banner { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: #222; border: 1px solid var(--border); }
 
-        /* PLAYER */
+        /* PLAYER & TELA CHEIA */
         .game-player { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
         .player-header { height: 60px; background: #111; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; border-bottom: 1px solid var(--border); }
-        .player-content { flex: 1; display: flex; flex-direction: column; position: relative; }
         iframe { width: 100%; height: 100%; border: none; flex: 1; }
         
         .player-footer { background: #0a0a0a; padding: 20px; display: flex; flex-direction: column; gap: 15px; max-height: 40vh; overflow-y: auto; }
-        .comment-box { background: var(--glass); padding: 10px; border-radius: 8px; margin-top: 5px; font-size: 0.9rem; }
+        .comment-box { background: var(--glass); padding: 10px; border-radius: 8px; margin-top: 5px; font-size: 0.9rem; border-left: 3px solid var(--primary); }
 
-        .delete-btn { position: absolute; top: 10px; right: 10px; background: var(--primary); border: none; color: #fff; border-radius: 8px; padding: 5px; cursor: pointer; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: var(--primary); border: none; color: #fff; border-radius: 8px; padding: 5px; cursor: pointer; z-index: 5; }
     </style>
 </head>
 <body>
 
-<div id="loading"><div class="loader"></div><p>Sincronizando Natal...</p></div>
 <div id="snow-container"></div>
 
 <header>
@@ -87,26 +82,28 @@
     </div>
 </header>
 
+<div style="padding: 20px 5% 0; display: flex; gap: 10px; overflow-x: auto;" id="catBar">
+    </div>
+
 <div class="main-grid" id="gameGrid"></div>
 
 <div class="modal-overlay" id="postModal" onclick="closeOnOverlay(event, this)">
     <div class="modal-box">
-        <h2 style="margin-top:0">🎁 Novo Presente</h2>
+        <h2 style="margin-top:0">🎁 Novo Jogo na Biblioteca</h2>
         <input id="gTitle" class="form-input" placeholder="Título do Jogo">
+        <input id="gUrl" class="form-input" placeholder="URL do Jogo (Embed)">
         
-        <label style="font-size: 0.8rem; color: var(--text-muted)">Conteúdo (URL ou Código HTML):</label>
-        <textarea id="gUrl" class="form-input" placeholder="Cole a URL ou o código HTML completo" style="height: 80px"></textarea>
-
-        <label style="font-size: 0.8rem; color: var(--text-muted)">Capa do Jogo:</label>
-        <input id="gImg" class="form-input" placeholder="URL da Imagem/GIF">
-        <input type="file" id="fCapa" hidden accept="image/*" onchange="toBase64(this, 'gImg')">
-        <button class="btn-primary" style="margin-bottom:15px; font-size:0.8rem" onclick="document.getElementById('fCapa').click()">Upload Capa Local</button>
+        <div style="display:flex; gap:10px; align-items: center; margin-bottom:15px">
+            <input id="gImg" class="form-input" placeholder="URL da Capa ou GIF" style="margin-bottom:0; flex:1">
+            <input type="file" id="fCapa" hidden accept="image/*" onchange="uploadCapa(this)">
+            <button class="btn-primary" style="padding: 10px;" onclick="document.getElementById('fCapa').click()"><i data-lucide="upload"></i></button>
+        </div>
 
         <select id="gCat" class="form-input">
-            <option>Natal 🎄</option><option>Ação</option><option>Aventura</option>
-            <option>RPG</option><option>Terror</option><option>Luta</option><option>Estratégia</option>
+            <option>Natal 🎄</option><option>Ação</option><option>Aventura</option><option>RPG</option>
+            <option>Terror</option><option>Luta</option><option>Estratégia</option><option>Corrida</option>
         </select>
-        <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveGame()">PUBLICAR NA BIBLIOTECA</button>
+        <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveGame()">ADICIONAR À BIBLIOTECA</button>
     </div>
 </div>
 
@@ -118,71 +115,79 @@
             <button class="btn-primary" style="width:100%; justify-content:center" onclick="doLogin()">Entrar</button>
         </div>
         <div id="userDiv" style="display:none">
-            <img id="pBannerView" class="profile-banner" src="">
+            <img id="pBannerView" class="profile-banner" src="https://placehold.co/600x200?text=Seu+Banner+GIF">
             <h2 id="pNickTitle" style="margin:0">Nick</h2>
-            <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:15px">ID: Admin/User</p>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px">Personalize seu perfil com GIFs</p>
 
-            <input id="pAvUrl" class="form-input" placeholder="URL Foto ou GIF">
-            <input id="pBanUrl" class="form-input" placeholder="URL Banner ou GIF">
+            <label>Link do Avatar (GIF/Foto):</label>
+            <input id="pAvUrl" class="form-input" placeholder="Cole a URL do GIF">
             
-            <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveProfile()">SALVAR PERFIL</button>
-            <button onclick="doLogout()" style="width:100%; background:none; border:none; color:red; cursor:pointer; margin-top:15px">Sair</button>
+            <label>Link do Banner (GIF/Foto):</label>
+            <input id="pBanUrl" class="form-input" placeholder="Cole a URL do GIF">
+            
+            <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveProfile()">SALVAR ALTERAÇÕES</button>
+            <button onclick="doLogout()" style="width:100%; background:none; border:none; color:red; cursor:pointer; margin-top:15px">Sair da Conta</button>
         </div>
     </div>
 </div>
 
 <div class="game-player" id="player">
     <div class="player-header">
-        <button onclick="closePlayer()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="chevron-left"></i></button>
-        <span id="playingTitle" style="font-weight:700">Jogo</span>
-        <button onclick="toggleFS()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="maximize"></i></button>
+        <button onclick="closePlayer()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="x"></i></button>
+        <span id="playingTitle" style="font-weight:700">Carregando...</span>
+        <button onclick="toggleFS()" style="background:none; border:none; color:#fff; cursor:pointer" title="Tela Cheia"><i data-lucide="maximize"></i></button>
     </div>
-    <div class="player-content">
-        <iframe id="gameFrame" allowfullscreen></iframe>
-    </div>
+    <iframe id="gameFrame" allowfullscreen></iframe>
     <div class="player-footer">
         <div style="display:flex; justify-content:space-between; align-items:center">
-            <div style="display:flex; gap:15px">
-                <button onclick="likeGame()" style="background:none; border:1px solid var(--primary); color:#fff; padding:5px 15px; border-radius:99px; cursor:pointer">
-                    ❤️ <span id="likeCount">0</span> Likes
-                </button>
-            </div>
-            <span id="playingAuthor" style="font-size:0.8rem; color:var(--text-muted)">Por: ---</span>
+            <button onclick="likeGame()" id="btnLike" style="background:var(--glass); border:1px solid var(--primary); color:#fff; padding:8px 20px; border-radius:99px; cursor:pointer; display:flex; gap:8px">
+                ❤️ <span id="likeCount">0</span> Likes
+            </button>
+            <span id="playingAuthor" style="font-size:0.8rem; color:var(--text-muted)"></span>
         </div>
-        <hr style="border:0; border-top:1px solid var(--border)">
         <div id="commentsArea">
-            <input id="comInput" class="form-input" placeholder="Escreva um comentário...">
-            <button class="btn-primary" style="font-size:0.7rem" onclick="addComment()">Enviar</button>
+            <div style="display:flex; gap:10px">
+                <input id="comInput" class="form-input" placeholder="O que achou do jogo?" style="margin-bottom:0">
+                <button class="btn-primary" onclick="addComment()">Comentar</button>
+            </div>
             <div id="commentsList" style="margin-top:15px"></div>
         </div>
     </div>
 </div>
 
 <script>
+// CONFIG FIREBASE
 const firebaseConfig = { apiKey: "SUA_API_KEY", authDomain: "gamehub-b8338.firebaseapp.com", projectId: "gamehub-b8338" };
 if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let user = JSON.parse(localStorage.getItem("gs_user")) || null;
 let currentGameId = null;
+const categories = ["Todos", "Natal 🎄", "Ação", "Aventura", "RPG", "Terror", "Luta", "Estratégia", "Corrida"];
 
 window.onload = () => {
     lucide.createIcons();
+    renderCats();
     loadGames();
     updateUI();
     startSnow();
-    setTimeout(() => { document.getElementById('loading').style.display = 'none'; }, 1500);
 };
 
-// --- BASE 64 ---
-function toBase64(input, targetId) {
-    const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => { document.getElementById(targetId).value = e.target.result; };
-    reader.readAsDataURL(file);
+// --- UPLOAD CAPA LOCAL (Base64) ---
+function uploadCapa(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('gImg').value = e.target.result; };
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 
-// --- AUTH & PERFIL ---
+// --- CATEGORIAS ---
+function renderCats() {
+    catBar.innerHTML = categories.map(c => `<button onclick="loadGames('${c}')" style="background:var(--glass); border:1px solid var(--border); color:#fff; padding:5px 15px; border-radius:99px; cursor:pointer; white-space:nowrap">${c}</button>`).join('');
+}
+
+// --- AUTH ---
 function doLogin() {
     const nick = loginNick.value.trim();
     if(!nick) return;
@@ -199,7 +204,7 @@ function saveProfile() {
     db.collection("users").doc(user.nick).set(user).then(() => {
         localStorage.setItem("gs_user", JSON.stringify(user));
         updateUI();
-        alert("Perfil Atualizado!");
+        alert("Perfil atualizado com sucesso!");
     });
 }
 
@@ -214,26 +219,29 @@ function updateUI() {
         pNickTitle.innerText = user.nick;
         pAvUrl.value = user.avatar;
         pBanUrl.value = user.banner;
-        pBannerView.src = user.banner;
+        pBannerView.src = user.banner || "https://placehold.co/600x200?text=Sem+Banner";
     }
 }
 
-// --- JOGOS (BIBLIOTECA) ---
+// --- BIBLIOTECA (Firestore) ---
 function saveGame() {
-    if(!user) return alert("Logue primeiro!");
+    if(!user) return alert("Faça login para postar!");
     const game = {
         title: gTitle.value, url: gUrl.value, img: gImg.value, 
         category: gCat.value, author: user.nick, likes: 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     db.collection("games").add(game).then(() => {
-        alert("Jogo adicionado à biblioteca!");
+        alert("Postado na biblioteca!");
         closeModals();
     });
 }
 
-function loadGames() {
-    db.collection("games").orderBy("createdAt", "desc").onSnapshot(snap => {
+function loadGames(filter = "Todos") {
+    let query = db.collection("games").orderBy("createdAt", "desc");
+    if(filter !== "Todos") query = query.where("category", "==", filter);
+
+    query.onSnapshot(snap => {
         gameGrid.innerHTML = "";
         snap.forEach(doc => {
             const g = doc.data();
@@ -241,11 +249,14 @@ function loadGames() {
             card.className = "game-card";
             card.onclick = () => openPlayer(doc.id, g);
             card.innerHTML = `
-                ${(user?.nick === g.author || user?.role === 'admin') ? `<button class="delete-btn" onclick="deleteGame(event,'${doc.id}')">🗑️</button>` : ''}
-                <img class="card-img" src="${g.img || 'https://placehold.co/400x200?text=Natal'}">
+                ${(user?.nick === g.author || user?.nick === 'ADM') ? `<button class="delete-btn" onclick="deleteGame(event,'${doc.id}')">🗑️</button>` : ''}
+                <img class="card-img" src="${g.img || 'https://placehold.co/400x200?text=Game'}">
                 <div class="card-body">
-                    <div style="font-weight:700">${g.title}</div>
-                    <div style="font-size:0.7rem; color:var(--text-muted)">${g.category} • ❤️ ${g.likes || 0}</div>
+                    <div style="font-weight:700; color:#fff">${g.title}</div>
+                    <div style="font-size:0.7rem; color:var(--text-muted); display:flex; justify-content:space-between">
+                        <span>${g.category}</span>
+                        <span>❤️ ${g.likes || 0}</span>
+                    </div>
                 </div>
             `;
             gameGrid.appendChild(card);
@@ -255,25 +266,23 @@ function loadGames() {
 
 function deleteGame(e, id) {
     e.stopPropagation();
-    if(confirm("Apagar da biblioteca?")) db.collection("games").doc(id).delete();
+    if(confirm("Remover da biblioteca permanentemente?")) db.collection("games").doc(id).delete();
 }
 
-// --- PLAYER & RELEVANCIA ---
+// --- PLAYER & FUNÇÕES ---
 function openPlayer(id, g) {
     currentGameId = id;
     player.style.display = 'flex';
     playingTitle.innerText = g.title;
-    playingAuthor.innerText = "Por: " + g.author;
+    playingAuthor.innerText = "Enviado por: " + g.author;
+    gameFrame.src = g.url;
     likeCount.innerText = g.likes || 0;
-    
-    // Se for código HTML, injeta. Se for URL, abre no src.
-    if(g.url.includes("<iframe") || g.url.includes("<script")) {
-        const doc = gameFrame.contentWindow.document;
-        doc.open(); doc.write(g.url); doc.close();
-    } else {
-        gameFrame.src = g.url;
-    }
     loadComments(id);
+}
+
+function toggleFS() {
+    if (!document.fullscreenElement) gameFrame.requestFullscreen();
+    else document.exitFullscreen();
 }
 
 function likeGame() {
@@ -301,11 +310,6 @@ function loadComments(id) {
     });
 }
 
-function toggleFS() {
-    if (!document.fullscreenElement) gameFrame.requestFullscreen();
-    else document.exitFullscreen();
-}
-
 function closePlayer() { player.style.display = 'none'; gameFrame.src = ""; }
 function openModal(id) { document.getElementById(id).style.display = 'grid'; }
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
@@ -319,7 +323,7 @@ function startSnow() {
         f.style.animationDuration = (Math.random() * 3 + 3) + 's';
         sc.appendChild(f);
         setTimeout(() => f.remove(), 5000);
-    }, 200);
+    }, 250);
 }
 </script>
 </body>
