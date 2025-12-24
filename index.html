@@ -8,242 +8,319 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
     <style>
         :root {
             --primary: #ff2e40; --primary-glow: rgba(255, 46, 64, 0.5);
             --secondary: #00ff9c; --gold: #ffd700; --bg-dark: #020205;
             --bg-card: rgba(20, 20, 25, 0.7); --glass: rgba(255, 255, 255, 0.08);
             --border: rgba(255, 255, 255, 0.15); --text-main: #ffffff;
-            --text-muted: #b0b0bb; --radius: 16px; --ease: cubic-bezier(0.23, 1, 0.32, 1);
+            --text-muted: #b0b0bb; --radius: 16px;
         }
 
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; outline: none; }
         body {
             margin: 0; font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-dark);
             background-image: radial-gradient(circle at 10% 10%, rgba(255, 46, 64, 0.15), transparent 30%), radial-gradient(circle at 90% 90%, rgba(0, 255, 156, 0.08), transparent 30%);
-            min-height: 100vh; overflow-x: hidden; position: relative;
+            min-height: 100vh; overflow-x: hidden;
         }
 
+        /* NEVE */
         #snow-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-        .snowflake { position: absolute; top: -10px; color: #fff; opacity: 0.8; animation: fall linear forwards; }
+        .snowflake { position: absolute; top: -10px; color: #fff; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh); } }
 
+        /* LOADING */
         #loading { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: 0.5s; }
-        .loader { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-bottom-color: var(--secondary); border-radius: 50%; animation: rot 1s linear infinite; box-shadow: 0 0 20px var(--primary-glow); }
+        .loader { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: rot 1s linear infinite; }
         @keyframes rot { 100% { transform: rotate(360deg); } }
 
+        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; height: 80px; background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .brand { font-weight: 900; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; color: #fff; }
+        .brand { font-weight: 900; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; }
         .brand span { color: var(--primary); }
 
-        .search-bar { background: var(--glass); border: 1px solid var(--border); padding: 10px 20px; border-radius: 99px; width: 300px; color: #fff; display: none; }
-        @media(min-width: 768px) { .search-bar { display: block; } }
-
         .nav-actions { display: flex; gap: 10px; align-items: center; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), #d61c2e); color: #fff; font-weight: 700; padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(255, 46, 64, 0.3); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #d61c2e); color: #fff; font-weight: 700; padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .user-pill { display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; background: var(--glass); border: 1px solid var(--border); border-radius: 99px; cursor: pointer; position: relative; }
         .user-pill::after { content: '🎅'; position: absolute; top: -12px; left: -5px; font-size: 1.2rem; transform: rotate(-15deg); }
         .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #222; }
 
-        .hero { padding: 40px 5%; text-align: center; }
-        .hero h1 { font-size: 3rem; margin: 0; background: linear-gradient(135deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .filters-wrapper { padding: 20px 5%; display: flex; gap: 10px; overflow-x: auto; }
-        .filter-chip { padding: 8px 20px; border-radius: 12px; background: var(--glass); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap; }
-        .filter-chip.active { background: var(--primary); color: #fff; }
-
+        /* GRID */
         .main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 40px 5%; }
-        .game-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; position: relative; transition: 0.3s; cursor: pointer; }
-        .game-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card-img-box img { width: 100%; height: 180px; object-fit: cover; }
-        .card-content { padding: 15px; }
+        .game-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px var(--primary-glow); }
+        .card-img { width: 100%; height: 160px; object-fit: cover; }
+        .card-body { padding: 15px; }
 
-        .delete-btn { position: absolute; top: 10px; right: 10px; background: var(--primary); color: #fff; border: none; padding: 8px; border-radius: 8px; cursor: pointer; z-index: 10; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 2000; display: none; place-items: center; }
-        .modal-box { background: #111; border: 1px solid var(--border); width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; }
+        /* MODALS */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 2000; display: none; place-items: center; overflow-y: auto; padding: 20px; }
+        .modal-box { background: #111; border: 1px solid var(--border); width: 100%; max-width: 450px; padding: 30px; border-radius: 24px; }
         .form-input { width: 100%; padding: 12px; background: #050505; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin-bottom: 15px; }
+        .profile-banner { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: #222; }
 
-        .game-player { position: fixed; inset: 0; z-index: 3000; background: #000; display: none; flex-direction: column; }
-        .player-bar { height: 60px; background: #111; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
-        iframe { flex: 1; border: none; width: 100%; }
+        /* PLAYER */
+        .game-player { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
+        .player-header { height: 60px; background: #111; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; border-bottom: 1px solid var(--border); }
+        .player-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; flex: 1; }
         
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
-        .toast { background: #333; color: #fff; padding: 12px 20px; border-radius: 8px; margin-top: 10px; border-left: 4px solid var(--primary); animation: slide 0.3s forwards; }
-        @keyframes slide { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .player-footer { background: #0a0a0a; padding: 20px; display: flex; flex-direction: column; gap: 15px; max-height: 40vh; overflow-y: auto; }
+        .comment-box { background: var(--glass); padding: 10px; border-radius: 8px; margin-top: 5px; font-size: 0.9rem; }
+
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: var(--primary); border: none; color: #fff; border-radius: 8px; padding: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="loading"><div class="loader"></div><p>CARREGANDO O NATAL...</p></div>
+<div id="loading"><div class="loader"></div><p>Sincronizando Natal...</p></div>
 <div id="snow-container"></div>
-<div id="toast-container"></div>
 
 <header>
     <div class="brand"><i data-lucide="gift"></i> Gamedevspace<span>.Cloud</span></div>
-    <input type="text" class="search-bar" id="searchInput" placeholder="Buscar presente..." onkeyup="renderGrid(allGames)">
     <div class="nav-actions">
-        <button class="btn-primary" onclick="openModal('postModal')"><i data-lucide="plus-circle"></i> POSTAR</button>
-        <div class="user-pill" onclick="openModal('loginModal')">
-            <img id="avatar" class="avatar" src="https://ui-avatars.com/api/?name=Guest">
-            <span id="userName">Login</span>
+        <button class="btn-primary" onclick="openModal('postModal')"><i data-lucide="plus"></i> POSTAR</button>
+        <div class="user-pill" onclick="openModal('profileModal')">
+            <img id="navAvatar" class="avatar" src="https://ui-avatars.com/api/?name=Guest">
+            <span id="navName">Login</span>
         </div>
     </div>
 </header>
 
-<div class="hero">
-    <h1>Ho Ho Ho! Jogue Agora</h1>
-    <p>A maior biblioteca de Natal do Gamedevspace.</p>
-</div>
-
-<div class="filters-wrapper" id="filters"></div>
-<div class="main-grid" id="grid"></div>
-
-<div class="modal-overlay" id="loginModal" onclick="closeOnOverlay(event, this)">
-    <div class="modal-box">
-        <h2 style="text-align:center">Acesso Pug 🎅</h2>
-        <input id="nick" class="form-input" placeholder="Nickname">
-        <input id="password" type="password" class="form-input" placeholder="Senha (Admin)">
-        <button class="btn-primary" style="width:100%; justify-content:center" onclick="login()">Entrar</button>
-    </div>
-</div>
+<div class="main-grid" id="gameGrid"></div>
 
 <div class="modal-overlay" id="postModal" onclick="closeOnOverlay(event, this)">
     <div class="modal-box">
-        <h2>Novo Jogo</h2>
-        <input id="gTitle" class="form-input" placeholder="Título">
-        <select id="contentType" class="form-input" onchange="toggleInputs()">
-            <option value="url">URL do Jogo</option>
-            <option value="html">Código HTML</option>
-        </select>
-        <input id="gUrl" class="form-input" placeholder="URL do Iframe">
-        <textarea id="gHtml" class="form-input" style="display:none; height:80px" placeholder="Cole o HTML"></textarea>
-        <input id="gImg" class="form-input" placeholder="URL da Capa">
+        <h2 style="margin-top:0">🎁 Novo Presente</h2>
+        <input id="gTitle" class="form-input" placeholder="Título do Jogo">
+        
+        <label style="font-size: 0.8rem; color: var(--text-muted)">Conteúdo (URL ou Código HTML):</label>
+        <textarea id="gUrl" class="form-input" placeholder="Cole a URL ou o código HTML completo" style="height: 80px"></textarea>
+
+        <label style="font-size: 0.8rem; color: var(--text-muted)">Capa do Jogo:</label>
+        <input id="gImg" class="form-input" placeholder="URL da Imagem/GIF">
+        <input type="file" id="fCapa" hidden accept="image/*" onchange="toBase64(this, 'gImg')">
+        <button class="btn-primary" style="margin-bottom:15px; font-size:0.8rem" onclick="document.getElementById('fCapa').click()">Upload Capa Local</button>
+
         <select id="gCat" class="form-input">
-            <option>Natal 🎄</option><option>Ação</option><option>RPG</option><option>Terror</option>
+            <option>Natal 🎄</option><option>Ação</option><option>Aventura</option>
+            <option>RPG</option><option>Terror</option><option>Luta</option><option>Estratégia</option>
         </select>
-        <button class="btn-primary" style="width:100%; justify-content:center" onclick="postGame()">Publicar</button>
+        <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveGame()">PUBLICAR NA BIBLIOTECA</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="profileModal" onclick="closeOnOverlay(event, this)">
+    <div class="modal-box">
+        <div id="authDiv">
+            <h2>Acesso 🎅</h2>
+            <input id="loginNick" class="form-input" placeholder="Seu Nickname">
+            <button class="btn-primary" style="width:100%; justify-content:center" onclick="doLogin()">Entrar</button>
+        </div>
+        <div id="userDiv" style="display:none">
+            <img id="pBannerView" class="profile-banner" src="">
+            <h2 id="pNickTitle" style="margin:0">Nick</h2>
+            <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:15px">ID: Admin/User</p>
+
+            <input id="pAvUrl" class="form-input" placeholder="URL Foto ou GIF">
+            <input id="pBanUrl" class="form-input" placeholder="URL Banner ou GIF">
+            
+            <button class="btn-primary" style="width:100%; justify-content:center" onclick="saveProfile()">SALVAR PERFIL</button>
+            <button onclick="doLogout()" style="width:100%; background:none; border:none; color:red; cursor:pointer; margin-top:15px">Sair</button>
+        </div>
     </div>
 </div>
 
 <div class="game-player" id="player">
-    <div class="player-bar">
-        <button onclick="closeGame()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="arrow-left"></i></button>
-        <span id="playerTitle">Game</span>
-        <div style="width:20px"></div>
+    <div class="player-header">
+        <button onclick="closePlayer()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="chevron-left"></i></button>
+        <span id="playingTitle" style="font-weight:700">Jogo</span>
+        <button onclick="toggleFS()" style="background:none; border:none; color:#fff; cursor:pointer"><i data-lucide="maximize"></i></button>
     </div>
-    <iframe id="frame" allowfullscreen></iframe>
+    <div class="player-content">
+        <iframe id="gameFrame" allowfullscreen></iframe>
+    </div>
+    <div class="player-footer">
+        <div style="display:flex; justify-content:space-between; align-items:center">
+            <div style="display:flex; gap:15px">
+                <button onclick="likeGame()" style="background:none; border:1px solid var(--primary); color:#fff; padding:5px 15px; border-radius:99px; cursor:pointer">
+                    ❤️ <span id="likeCount">0</span> Likes
+                </button>
+            </div>
+            <span id="playingAuthor" style="font-size:0.8rem; color:var(--text-muted)">Por: ---</span>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border)">
+        <div id="commentsArea">
+            <input id="comInput" class="form-input" placeholder="Escreva um comentário...">
+            <button class="btn-primary" style="font-size:0.7rem" onclick="addComment()">Enviar</button>
+            <div id="commentsList" style="margin-top:15px"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-// COLOQUE SUA API KEY ABAIXO
-const firebaseConfig = { apiKey: "", authDomain: "gamehub-b8338.firebaseapp.com", projectId: "gamehub-b8338" };
+const firebaseConfig = { apiKey: "SUA_API_KEY", authDomain: "gamehub-b8338.firebaseapp.com", projectId: "gamehub-b8338" };
 if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let user = JSON.parse(localStorage.getItem("gh_user")) || null;
-let allGames = [];
-const categories = ["Todos", "Natal 🎄", "Ação", "RPG", "Terror"];
-let currentCat = "Todos";
+let user = JSON.parse(localStorage.getItem("gs_user")) || null;
+let currentGameId = null;
 
 window.onload = () => {
     lucide.createIcons();
-    updateUserUI();
-    renderFilters();
     loadGames();
+    updateUI();
     startSnow();
     setTimeout(() => { document.getElementById('loading').style.display = 'none'; }, 1500);
 };
 
-function toggleInputs() {
-    const isHtml = document.getElementById('contentType').value === 'html';
-    document.getElementById('gUrl').style.display = isHtml ? 'none' : 'block';
-    document.getElementById('gHtml').style.display = isHtml ? 'block' : 'none';
+// --- BASE 64 ---
+function toBase64(input, targetId) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => { document.getElementById(targetId).value = e.target.result; };
+    reader.readAsDataURL(file);
 }
 
-function startSnow() {
-    const container = document.getElementById('snow-container');
-    setInterval(() => {
-        const flake = document.createElement('div');
-        flake.className = 'snowflake'; flake.innerText = '❄';
-        flake.style.left = Math.random() * 100 + 'vw';
-        flake.style.animationDuration = (Math.random() * 3 + 4) + 's';
-        container.appendChild(flake);
-        setTimeout(() => flake.remove(), 6000);
-    }, 300);
+// --- AUTH & PERFIL ---
+function doLogin() {
+    const nick = loginNick.value.trim();
+    if(!nick) return;
+    db.collection("users").doc(nick).get().then(doc => {
+        user = doc.exists ? doc.data() : { nick, avatar: "", banner: "", role: "user" };
+        localStorage.setItem("gs_user", JSON.stringify(user));
+        location.reload();
+    });
 }
 
-function login() {
-    const n = nick.value.trim(), p = password.value;
-    user = (n === "ADM" && p === "ADMINBATHONYDEVS") ? {nick: n, role: "admin"} : {nick: n, role: "user"};
-    localStorage.setItem("gh_user", JSON.stringify(user));
-    location.reload();
+function saveProfile() {
+    user.avatar = pAvUrl.value;
+    user.banner = pBanUrl.value;
+    db.collection("users").doc(user.nick).set(user).then(() => {
+        localStorage.setItem("gs_user", JSON.stringify(user));
+        updateUI();
+        alert("Perfil Atualizado!");
+    });
 }
 
-function updateUserUI() {
+function doLogout() { localStorage.removeItem("gs_user"); location.reload(); }
+
+function updateUI() {
     if(user) {
-        userName.innerText = user.nick;
-        avatar.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nick}`;
+        navName.innerText = user.nick;
+        navAvatar.src = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nick}`;
+        authDiv.style.display = 'none';
+        userDiv.style.display = 'block';
+        pNickTitle.innerText = user.nick;
+        pAvUrl.value = user.avatar;
+        pBanUrl.value = user.banner;
+        pBannerView.src = user.banner;
     }
 }
 
-function postGame() {
-    const data = {
-        title: gTitle.value, img: gImg.value, category: gCat.value,
-        url: gUrl.value, html: gHtml.value, likes: 0,
+// --- JOGOS (BIBLIOTECA) ---
+function saveGame() {
+    if(!user) return alert("Logue primeiro!");
+    const game = {
+        title: gTitle.value, url: gUrl.value, img: gImg.value, 
+        category: gCat.value, author: user.nick, likes: 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
-    db.collection("games").add(data).then(() => { alert("Postado!"); location.reload(); });
+    db.collection("games").add(game).then(() => {
+        alert("Jogo adicionado à biblioteca!");
+        closeModals();
+    });
 }
 
 function loadGames() {
     db.collection("games").orderBy("createdAt", "desc").onSnapshot(snap => {
-        allGames = [];
-        snap.forEach(d => allGames.push({id: d.id, ...d.data()}));
-        renderGrid(allGames);
+        gameGrid.innerHTML = "";
+        snap.forEach(doc => {
+            const g = doc.data();
+            const card = document.createElement('div');
+            card.className = "game-card";
+            card.onclick = () => openPlayer(doc.id, g);
+            card.innerHTML = `
+                ${(user?.nick === g.author || user?.role === 'admin') ? `<button class="delete-btn" onclick="deleteGame(event,'${doc.id}')">🗑️</button>` : ''}
+                <img class="card-img" src="${g.img || 'https://placehold.co/400x200?text=Natal'}">
+                <div class="card-body">
+                    <div style="font-weight:700">${g.title}</div>
+                    <div style="font-size:0.7rem; color:var(--text-muted)">${g.category} • ❤️ ${g.likes || 0}</div>
+                </div>
+            `;
+            gameGrid.appendChild(card);
+        });
     });
-}
-
-function renderGrid(games) {
-    const filtered = games.filter(g => (currentCat === "Todos" || g.category === currentCat) && g.title.toLowerCase().includes(searchInput.value.toLowerCase()));
-    grid.innerHTML = filtered.map(g => `
-        <div class="game-card" onclick="openGame('${g.id}')">
-            <div class="card-img-box">
-                ${user?.role === 'admin' ? `<button class="delete-btn" onclick="deleteGame(event, '${g.id}')"><i data-lucide="trash"></i></button>` : ''}
-                <img src="${g.img}">
-            </div>
-            <div class="card-content">
-                <div class="card-title">${g.title}</div>
-                <div style="color:var(--text-muted); font-size:0.8rem">${g.category}</div>
-            </div>
-        </div>
-    `).join('');
-    lucide.createIcons();
 }
 
 function deleteGame(e, id) {
     e.stopPropagation();
-    if(confirm("Apagar jogo?")) db.collection("games").doc(id).delete();
+    if(confirm("Apagar da biblioteca?")) db.collection("games").doc(id).delete();
 }
 
-function openGame(id) {
-    const g = allGames.find(x => x.id === id);
+// --- PLAYER & RELEVANCIA ---
+function openPlayer(id, g) {
+    currentGameId = id;
     player.style.display = 'flex';
-    playerTitle.innerText = g.title;
-    if(g.html) {
-        const doc = frame.contentWindow.document;
-        doc.open(); doc.write(g.html); doc.close();
+    playingTitle.innerText = g.title;
+    playingAuthor.innerText = "Por: " + g.author;
+    likeCount.innerText = g.likes || 0;
+    
+    // Se for código HTML, injeta. Se for URL, abre no src.
+    if(g.url.includes("<iframe") || g.url.includes("<script")) {
+        const doc = gameFrame.contentWindow.document;
+        doc.open(); doc.write(g.url); doc.close();
     } else {
-        frame.src = g.url;
+        gameFrame.src = g.url;
     }
+    loadComments(id);
 }
 
-function closeGame() { player.style.display = 'none'; frame.src = ""; }
-function renderFilters() { filters.innerHTML = categories.map(c => `<div class="filter-chip ${c===currentCat?'active':''}" onclick="currentCat='${c}'; renderFilters(); renderGrid(allGames)">${c}</div>`).join(''); }
+function likeGame() {
+    if(!user) return alert("Logue para curtir!");
+    db.collection("games").doc(currentGameId).update({
+        likes: firebase.firestore.FieldValue.increment(1)
+    });
+}
+
+function addComment() {
+    if(!user || !comInput.value) return;
+    db.collection("games").doc(currentGameId).collection("comments").add({
+        user: user.nick, text: comInput.value, date: Date.now()
+    });
+    comInput.value = "";
+}
+
+function loadComments(id) {
+    db.collection("games").doc(id).collection("comments").orderBy("date", "desc").onSnapshot(snap => {
+        commentsList.innerHTML = "";
+        snap.forEach(doc => {
+            const c = doc.data();
+            commentsList.innerHTML += `<div class="comment-box"><b>${c.user}:</b> ${c.text}</div>`;
+        });
+    });
+}
+
+function toggleFS() {
+    if (!document.fullscreenElement) gameFrame.requestFullscreen();
+    else document.exitFullscreen();
+}
+
+function closePlayer() { player.style.display = 'none'; gameFrame.src = ""; }
 function openModal(id) { document.getElementById(id).style.display = 'grid'; }
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
 function closeOnOverlay(e, el) { if(e.target === el) closeModals(); }
+
+function startSnow() {
+    const sc = document.getElementById('snow-container');
+    setInterval(() => {
+        const f = document.createElement('div'); f.className = 'snowflake'; f.innerText = '❄';
+        f.style.left = Math.random() * 100 + 'vw';
+        f.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        sc.appendChild(f);
+        setTimeout(() => f.remove(), 5000);
+    }, 200);
+}
 </script>
 </body>
 </html>
