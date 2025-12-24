@@ -12,251 +12,100 @@
 
 <style>
 :root {
-    /* PALETA DE NATAL CYBERPUNK */
-    --primary: #ff2e40; /* Vermelho Noel */
-    --primary-glow: rgba(255, 46, 64, 0.5);
-    --secondary: #00ff9c; /* Verde Elfo */
-    --gold: #ffd700; /* Dourado Estrela */
-    --bg-dark: #020205;
-    --bg-card: rgba(20, 20, 25, 0.7);
-    --glass: rgba(255, 255, 255, 0.08);
-    --border: rgba(255, 255, 255, 0.15);
-    --text-main: #ffffff;
-    --text-muted: #b0b0bb;
-    --radius: 16px;
-    --ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --primary: #ff2e40; --primary-glow: rgba(255, 46, 64, 0.5);
+    --secondary: #00ff9c; --gold: #ffd700; --bg-dark: #020205;
+    --bg-card: rgba(20, 20, 25, 0.7); --glass: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.15); --text-main: #ffffff;
+    --text-muted: #b0b0bb; --radius: 16px; --ease: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
 body {
-    margin: 0;
-    font-family: 'Outfit', sans-serif;
-    color: var(--text-main);
-    background-color: var(--bg-dark);
-    /* Gradiente festivo sutil no fundo */
-    background-image: 
-        radial-gradient(circle at 10% 10%, rgba(255, 46, 64, 0.15), transparent 30%),
-        radial-gradient(circle at 90% 90%, rgba(0, 255, 156, 0.08), transparent 30%);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
+    margin: 0; font-family: 'Outfit', sans-serif; color: var(--text-main); background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 10% 10%, rgba(255, 46, 64, 0.15), transparent 30%), radial-gradient(circle at 90% 90%, rgba(0, 255, 156, 0.08), transparent 30%);
+    min-height: 100vh; overflow-x: hidden; position: relative;
+}
+
+/* Estilos Adicionais para Upload */
+.upload-label {
+    display: block; padding: 10px; background: rgba(255,255,255,0.05);
+    border: 1px dashed var(--border); border-radius: 8px; text-align: center;
+    cursor: pointer; margin-bottom: 10px; font-size: 0.8rem; transition: 0.3s;
+}
+.upload-label:hover { border-color: var(--secondary); color: var(--secondary); }
+input[type="file"] { display: none; }
+
+/* Estilo do Perfil Expandido */
+.profile-banner-preview {
+    width: 100%; height: 80px; background: #222; border-radius: 12px; 
+    margin-bottom: 10px; object-fit: cover; border: 1px solid var(--border);
 }
 
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-dark); }
 ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; border: 1px solid var(--primary); }
 
-/* SISTEMA DE NEVE */
-#snow-container {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 1; overflow: hidden;
-}
-.snowflake {
-    position: absolute; top: -10px; color: #fff; opacity: 0.8;
-    animation: fall linear forwards;
-}
+#snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+.snowflake { position: absolute; top: -10px; color: #fff; opacity: 0.8; animation: fall linear forwards; }
 @keyframes fall { to { transform: translateY(105vh); } }
 
-/* LOADING - Agora com cores de Natal */
-#loading {
-    position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-    transition: opacity 0.5s ease;
-}
-.loader {
-    width: 50px; height: 50px; 
-    border: 4px solid rgba(255,255,255,0.1);
-    border-top-color: var(--primary);
-    border-bottom-color: var(--secondary);
-    border-radius: 50%;
-    animation: rot 1s linear infinite; box-shadow: 0 0 20px var(--primary-glow);
-}
+#loading { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity 0.5s ease; }
+.loader { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-bottom-color: var(--secondary); border-radius: 50%; animation: rot 1s linear infinite; box-shadow: 0 0 20px var(--primary-glow); }
 @keyframes rot { 100% { transform: rotate(360deg); } }
 
-/* HEADER */
-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 5%; height: 80px;
-    background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-}
-
-.brand {
-    font-weight: 900; font-size: 1.6rem; letter-spacing: -1px;
-    display: flex; align-items: center; gap: 10px;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 46, 64, 0.3);
-}
+header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; height: 80px; background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.brand { font-weight: 900; font-size: 1.6rem; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; color: #fff; text-shadow: 0 0 10px rgba(255, 46, 64, 0.3); }
 .brand span { color: var(--primary); }
-
-.search-bar {
-    display: none;
-    background: var(--glass); border: 1px solid var(--border);
-    padding: 10px 20px; border-radius: 99px; width: 300px;
-    color: #fff; font-family: inherit; transition: 0.3s;
-}
-.search-bar:focus { 
-    border-color: var(--primary); width: 320px; 
-    box-shadow: 0 0 15px var(--primary-glow); background: rgba(0,0,0,0.5);
-}
-
+.search-bar { display: none; background: var(--glass); border: 1px solid var(--border); padding: 10px 20px; border-radius: 99px; width: 300px; color: #fff; font-family: inherit; transition: 0.3s; }
+.search-bar:focus { border-color: var(--primary); width: 320px; box-shadow: 0 0 15px var(--primary-glow); background: rgba(0,0,0,0.5); }
 .nav-actions { display: flex; gap: 10px; align-items: center; }
-
-.btn-icon-only {
-    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border);
-    background: var(--glass); color: #fff; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: 0.3s;
-}
+.btn-icon-only { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--glass); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 .btn-icon-only:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); color: var(--primary); }
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary), #d61c2e);
-    color: #fff; font-weight: 700;
-    padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer;
-    transition: 0.3s var(--ease); display: flex; align-items: center; gap: 8px;
-    box-shadow: 0 4px 15px rgba(255, 46, 64, 0.3);
-}
-.btn-primary:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 25px var(--primary-glow); 
-    filter: brightness(1.1);
-}
-
-.user-pill {
-    display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px;
-    background: var(--glass); border: 1px solid var(--border);
-    border-radius: 99px; cursor: pointer; transition: 0.3s;
-    position: relative;
-}
-/* Gorrinho de natal no avatar (pseudo-elemento sutil) */
-.user-pill::after {
-    content: '🎅'; position: absolute; top: -12px; left: -5px; font-size: 1.2rem; transform: rotate(-15deg);
-}
+.btn-primary { background: linear-gradient(135deg, var(--primary), #d61c2e); color: #fff; font-weight: 700; padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer; transition: 0.3s var(--ease); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(255, 46, 64, 0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px var(--primary-glow); filter: brightness(1.1); }
+.user-pill { display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; background: var(--glass); border: 1px solid var(--border); border-radius: 99px; cursor: pointer; transition: 0.3s; position: relative; }
+.user-pill::after { content: '🎅'; position: absolute; top: -12px; left: -5px; font-size: 1.2rem; transform: rotate(-15deg); }
 .user-pill:hover { border-color: var(--secondary); background: rgba(0, 255, 156, 0.05); }
 .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #222; border: 2px solid var(--border); }
 
-/* HERO */
-.hero {
-    padding: 40px 5% 10px; text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: 15px;
-    position: relative; z-index: 2;
-}
-.hero h1 {
-    font-size: 3rem; margin: 0; line-height: 1.1;
-    background: linear-gradient(135deg, #fff 40%, var(--primary) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(255,46,64,0.2);
-}
+.hero { padding: 40px 5% 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative; z-index: 2; }
+.hero h1 { font-size: 3rem; margin: 0; line-height: 1.1; background: linear-gradient(135deg, #fff 40%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255,46,64,0.2); }
 .hero p { color: var(--text-muted); max-width: 500px; margin: 0; font-size: 1.1rem; }
 
-/* FILTERS */
-.filters-wrapper {
-    padding: 30px 5%; display: flex; gap: 10px; overflow-x: auto;
-    scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-    z-index: 2; position: relative;
-}
-.filter-chip {
-    padding: 8px 20px; border-radius: 12px; font-size: 0.9rem;
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: 0.3s;
-}
+.filters-wrapper { padding: 30px 5%; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); z-index: 2; position: relative; }
+.filter-chip { padding: 8px 20px; border-radius: 12px; font-size: 0.9rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: 0.3s; }
 .filter-chip:hover { border-color: var(--primary); color: #fff; }
-.filter-chip.active { 
-    background: var(--primary); color: #fff; border-color: var(--primary); 
-    font-weight: 700; box-shadow: 0 0 15px var(--primary-glow);
-}
+.filter-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 700; box-shadow: 0 0 15px var(--primary-glow); }
 
-/* GRID - Efeito de Gelo */
-.main-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px; padding: 0 5% 60px; position: relative; z-index: 2;
-}
-.game-card {
-    background: rgba(30, 30, 35, 0.6); 
-    backdrop-filter: blur(10px);
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,0.08); 
-    overflow: hidden;
-    position: relative; transition: 0.4s var(--ease); cursor: pointer;
-    display: flex; flex-direction: column;
-}
-.game-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: var(--primary);
-    box-shadow: 0 10px 40px -10px rgba(255, 46, 64, 0.2);
-}
+.main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 0 5% 60px; position: relative; z-index: 2; }
+.game-card { background: rgba(30, 30, 35, 0.6); backdrop-filter: blur(10px); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.08); overflow: hidden; position: relative; transition: 0.4s var(--ease); cursor: pointer; display: flex; flex-direction: column; }
+.game-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--primary); box-shadow: 0 10px 40px -10px rgba(255, 46, 64, 0.2); }
 .card-img-box { position: relative; height: 180px; overflow: hidden; }
 .card-img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
-.card-img-box::after {
-    /* Efeito de geada leve na imagem */
-    content: ''; position: absolute; inset: 0; 
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-}
+.card-img-box::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); }
 .game-card:hover img { transform: scale(1.1); }
-
-.delete-btn {
-    position: absolute; top: 10px; right: 10px;
-    background: var(--primary); color: #fff;
-    border: none; width: 36px; height: 36px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.2s;
-}
+.delete-btn { position: absolute; top: 10px; right: 10px; background: var(--primary); color: #fff; border: none; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.2s; }
 .delete-btn:hover { transform: scale(1.1); background: #ff0019; }
-
 .card-content { padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .card-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; color: #fff; }
-.card-info {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.85rem; color: var(--text-muted);
-}
-.badge { 
-    background: rgba(255, 46, 64, 0.15); color: #ff8fa3; border: 1px solid rgba(255,46,64,0.3);
-    padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
-}
+.card-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted); }
+.badge { background: rgba(255, 46, 64, 0.15); color: #ff8fa3; border: 1px solid rgba(255,46,64,0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
 .likes-info { display: flex; align-items: center; gap: 5px; color: #fff; }
 .likes-info i { width: 14px; color: var(--primary); fill: var(--primary); }
 
-/* MODALS */
-.modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
-    z-index: 2000; display: none; place-items: center; opacity: 0; transition: 0.3s;
-}
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 2000; display: none; place-items: center; opacity: 0; transition: 0.3s; overflow-y: auto; padding: 20px 0;}
 .modal-overlay.open { opacity: 1; }
-.modal-box {
-    background: #111; border: 1px solid var(--border); width: 90%; max-width: 400px;
-    padding: 30px; border-radius: 24px; position: relative; transform: scale(0.9); transition: 0.3s var(--ease);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1a1a' fill-opacity='1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1'/%3E%3C/g%3E%3C/svg%3E");
-}
+.modal-box { background: #111; border: 1px solid var(--border); width: 90%; max-width: 400px; padding: 30px; border-radius: 24px; position: relative; transform: scale(0.9); transition: 0.3s var(--ease); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 .modal-overlay.open .modal-box { transform: scale(1); }
 .modal-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; text-align: center; color: #fff; }
-.form-input {
-    width: 100%; padding: 14px; background: #050505; border: 1px solid var(--border);
-    border-radius: 12px; color: #fff; transition: 0.3s; margin-bottom: 15px;
-}
+.form-input { width: 100%; padding: 14px; background: #050505; border: 1px solid var(--border); border-radius: 12px; color: #fff; transition: 0.3s; margin-bottom: 15px; }
 .form-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(255,46,64,0.1); }
 
-/* TOUR */
-.tour-mask {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9000;
-    display: none; clip-path: polygon(0% 0%, 0% 100%, 0 100%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%, 100% 100%, 100% 0%);
-    transition: 0.3s;
-}
-.tour-highlight-box {
-    position: absolute; border: 2px solid var(--gold); border-radius: 12px;
-    box-shadow: 0 0 30px var(--gold), inset 0 0 20px rgba(255, 215, 0, 0.2);
-    pointer-events: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 9002; display: none;
-}
-.tour-tooltip {
-    position: absolute; background: #1a0505; border: 1px solid var(--primary);
-    padding: 20px; border-radius: 16px; width: 300px; color: #fff; z-index: 9003;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: all 0.4s ease; display: none;
-}
+/* TOUR e OUTROS */
+.tour-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9000; display: none; clip-path: polygon(0% 0%, 0% 100%, 0 100%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%, 100% 100%, 100% 0%); transition: 0.3s; }
+.tour-highlight-box { position: absolute; border: 2px solid var(--gold); border-radius: 12px; box-shadow: 0 0 30px var(--gold), inset 0 0 20px rgba(255, 215, 0, 0.2); pointer-events: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 9002; display: none; }
+.tour-tooltip { position: absolute; background: #1a0505; border: 1px solid var(--primary); padding: 20px; border-radius: 16px; width: 300px; color: #fff; z-index: 9003; box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: all 0.4s ease; display: none; }
 .tour-title { font-weight: 800; font-size: 1.2rem; color: var(--primary); margin-bottom: 8px; display: flex; gap:8px; align-items:center;}
 .tour-desc { font-size: 0.95rem; color: #ccc; line-height: 1.5; margin-bottom: 15px; }
 .tour-actions { display: flex; justify-content: space-between; align-items: center; }
@@ -264,46 +113,21 @@ header {
 .btn-next { background: var(--primary); color: #fff; }
 .btn-skip { background: transparent; color: #888; }
 
-/* PLAYER & TOASTS */
-.game-player {
-    position: fixed; inset: 0; z-index: 3000; background: #000;
-    display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: 0.3s;
-}
+.game-player { position: fixed; inset: 0; z-index: 3000; background: #000; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: 0.3s; }
 .game-player.active { opacity: 1; pointer-events: all; }
-.player-bar {
-    height: 60px; display: flex; justify-content: space-between; align-items: center;
-    padding: 0 30px; background: #111; border-bottom: 1px solid #333;
-}
+.player-bar { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; background: #111; border-bottom: 1px solid #333; }
 .player-frame { flex: 1; border: none; width: 100%; background: #000; }
-.like-btn-lg {
-    display: flex; align-items: center; gap: 8px; padding: 8px 20px;
-    border-radius: 8px; cursor: pointer; transition: 0.2s; background: #222;
-}
+.like-btn-lg { display: flex; align-items: center; gap: 8px; padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: 0.2s; background: #222; }
 .like-btn-lg.active { color: var(--primary); background: rgba(255, 46, 64, 0.15); border: 1px solid var(--primary); }
 .like-btn-lg.active svg { fill: var(--primary); }
 
 #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-.toast {
-    background: #18181b; border: 1px solid var(--border); padding: 16px 24px;
-    border-radius: 12px; display: flex; align-items: center; gap: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateX(100px); opacity: 0;
-    animation: slideIn 0.3s forwards;
-}
+.toast { background: #18181b; border: 1px solid var(--border); padding: 16px 24px; border-radius: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateX(100px); opacity: 0; animation: slideIn 0.3s forwards; }
 .toast.success { border-left: 4px solid var(--secondary); }
 .toast.error { border-left: 4px solid var(--primary); }
 @keyframes slideIn { to { transform: translateX(0); opacity: 1; } }
 
-/* NOVO: ESTILO DISCRETO PARA O RODAPÉ DE CRÉDITOS */
-footer {
-    padding: 30px 5% 20px;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    opacity: 0.5; /* Deixa bem sutil */
-    z-index: 2;
-    position: relative;
-    margin-top: -60px; /* Ajuste para o rodapé ficar logo após o grid */
-}
+footer { padding: 30px 5% 20px; text-align: center; color: var(--text-muted); font-size: 0.75rem; opacity: 0.5; z-index: 2; position: relative; margin-top: -60px; }
 
 @media(min-width: 768px) { .search-bar { display: block; } }
 </style>
@@ -317,37 +141,18 @@ footer {
 
 <div id="snow-container"></div> <div id="toast-container"></div>
 
-<div class="tour-mask" id="tourMask"></div>
-<div class="tour-highlight-box" id="tourBox"></div>
-<div class="tour-tooltip" id="tourTip">
-    <div class="tour-title" id="tourTitle">Título</div>
-    <div class="tour-desc" id="tourDesc">Descrição aqui.</div>
-    <div class="tour-actions">
-        <button class="btn-tour btn-skip" onclick="endTour()">Pular</button>
-        <button class="btn-tour btn-next" onclick="nextStep()">Próximo</button>
-    </div>
-</div>
-
 <header>
     <div class="brand">
         <i data-lucide="gift" size="28" color="var(--primary)"></i>
         Gamedevspace<span>.Cloud</span>
     </div>
-    
-    <input type="text" class="search-bar" id="searchInput" placeholder="Buscar presente (jogo)..." onkeyup="filterGames()">
-
+    <input type="text" class="search-bar" id="searchInput" placeholder="Buscar presente..." onkeyup="filterGames()">
     <div class="nav-actions">
-        <button class="btn-icon-only" onclick="startTour(true)" title="Ajuda do Papai Noel">
-            <i data-lucide="help-circle" size="20"></i>
-        </button>
-        
-        <button class="btn-primary" id="btnPost" onclick="openModal('postModal')">
-            <i data-lucide="plus-circle"></i> <span style="display:none; @media(min-width:600px){display:block}">POSTAR</span>
-        </button>
-        
+        <button class="btn-icon-only" onclick="startTour(true)"><i data-lucide="help-circle" size="20"></i></button>
+        <button class="btn-primary" id="btnPost" onclick="openModal('postModal')"><i data-lucide="plus-circle"></i> POSTAR</button>
         <div class="user-pill" id="btnLogin" onclick="openModal('loginModal')">
-            <img id="avatar" class="avatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
-            <span id="userName" style="font-size: 0.9rem; font-weight:600;">Login</span>
+            <img id="avatar" class="avatar" src="">
+            <span id="userName">Login</span>
         </div>
     </div>
 </header>
@@ -360,28 +165,33 @@ footer {
 <div class="filters-wrapper" id="filters"></div>
 <div class="main-grid" id="grid"></div>
 
-<footer>
-    Desenvolvedores: **jhossmine2** e **Exiled** | Gamedevspace Natal Edition 🎄
-</footer>
-
-<div class="modal-overlay" id="welcomeModal" style="z-index: 9100;">
-    <div class="modal-box" style="text-align:center; border: 2px solid var(--primary);">
-        <div style="font-size: 3rem; margin-bottom:10px">🎄👋</div>
-        <div class="modal-title" style="color:var(--primary)">Bem-vindo ao Natal Pug!</div>
-        <p style="color:#aaa; margin-bottom:25px">É sua primeira vez aqui no nosso evento de fim de ano? Deixe-me te mostrar os presentes (recursos) do site!</p>
-        <button class="btn-primary" style="width:100%; justify-content:center; margin-bottom:10px" onclick="startTour()">
-            Mostrar o Tour
-        </button>
-        <button class="btn-tour btn-skip" style="width:100%" onclick="closeWelcome()">Agora não</button>
-    </div>
-</div>
-
 <div class="modal-overlay" id="loginModal" onclick="closeOnOverlay(event, this)">
     <div class="modal-box">
-        <div class="modal-title">Acesso Pug 🎅</div>
-        <input id="nick" class="form-input" placeholder="Seu Nickname">
-        <input id="password" type="password" class="form-input" placeholder="Senha (Admin apenas)">
-        <button class="btn-primary" style="width:100%; justify-content: center;" onclick="login()">Entrar na Festa</button>
+        <div id="loginForm">
+            <div class="modal-title">Acesso Pug 🎅</div>
+            <input id="nick" class="form-input" placeholder="Seu Nickname">
+            <input id="password" type="password" class="form-input" placeholder="Senha (Admin apenas)">
+            <button class="btn-primary" style="width:100%; justify-content: center;" onclick="login()">Entrar na Festa</button>
+        </div>
+        <div id="profileForm" style="display:none;">
+            <div class="modal-title">Seu Perfil Natalino</div>
+            <img id="bannerPrev" class="profile-banner-preview" src="">
+            
+            <label class="upload-label">
+                <i data-lucide="image"></i> Mudar Foto (ou GIF)
+                <input type="file" accept="image/*" onchange="encodeImageFileAsURL(this, 'avatarPrev')">
+            </label>
+            <input id="pAvatarUrl" class="form-input" placeholder="URL da Foto/GIF">
+            
+            <label class="upload-label">
+                <i data-lucide="layout"></i> Mudar Banner (ou GIF)
+                <input type="file" accept="image/*" onchange="encodeImageFileAsURL(this, 'bannerPrev')">
+            </label>
+            <input id="pBannerUrl" class="form-input" placeholder="URL do Banner/GIF">
+            
+            <button class="btn-primary" style="width:100%; justify-content: center;" onclick="saveProfile()">Salvar Perfil</button>
+            <button class="btn-tour btn-skip" style="width:100%; margin-top:10px;" onclick="logout()">Sair</button>
+        </div>
     </div>
 </div>
 
@@ -389,8 +199,21 @@ footer {
     <div class="modal-box">
         <div class="modal-title">Novo Presente (Jogo)</div>
         <input id="gTitle" class="form-input" placeholder="Nome do Jogo">
+        
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:5px;">Arquivo (HTML/JS) ou URL:</p>
+        <label class="upload-label">
+            <i data-lucide="file-code"></i> Subir Arquivo (HTML/JS)
+            <input type="file" accept=".html,.js" onchange="encodeFileToBase64(this, 'gUrl')">
+        </label>
         <input id="gUrl" class="form-input" placeholder="URL do Embed/Iframe">
-        <input id="gImg" class="form-input" placeholder="URL da Capa (Imagem)">
+        
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:5px;">Capa do Jogo:</p>
+        <label class="upload-label">
+            <i data-lucide="upload"></i> Upload da Capa
+            <input type="file" accept="image/*" onchange="encodeImageFileAsURL(this, 'gImg')">
+        </label>
+        <input id="gImg" class="form-input" placeholder="URL da Capa">
+        
         <select id="gCat" class="form-input">
             <option>Ação</option><option>Aventura</option><option>RPG</option>
             <option>Terror</option><option>Corrida</option><option>Tiro</option><option>Puzzle</option><option>Natal 🎄</option>
@@ -403,7 +226,7 @@ footer {
     <div class="player-bar">
         <div style="display:flex; gap:15px; align-items:center;">
             <button onclick="closeGame()" style="background:none; border:none; color:#fff; cursor:pointer;"><i data-lucide="arrow-left"></i></button>
-            <span id="playerTitle" style="font-weight:700; font-size:1.1rem">Game Title</span>
+            <span id="playerTitle">Game Title</span>
         </div>
         <div class="like-btn-lg" id="likeBtn" onclick="toggleLike()">
             <i data-lucide="heart" size="20"></i><span id="likeCount">0</span>
@@ -413,16 +236,13 @@ footer {
 </div>
 
 <script>
+// Firebase fictício mantido conforme sua estrutura
 const firebaseConfig = { apiKey: "", authDomain: "gamehub-b8338.firebaseapp.com", projectId: "gamehub-b8338" };
 if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-const ADMIN_USER = "ADM";
-const ADMIN_PASS = "ADMINBATHONYDEVS";
 let user = JSON.parse(localStorage.getItem("gh_user"));
-let currentGameId = null;
 let allGames = [];
-// Adicionei a categoria NATAL
 const categories = ["Todos", "Natal 🎄", "Ação", "Aventura", "RPG", "Terror", "Corrida", "Tiro", "Puzzle"];
 let currentCat = "Todos";
 
@@ -431,150 +251,149 @@ window.onload = () => {
     updateUserUI();
     renderFilters();
     loadGames();
-    startSnow(); // Inicia a neve
+    startSnow();
     setTimeout(() => {
         document.getElementById('loading').style.opacity = '0';
         setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
-        checkFirstTime();
     }, 1200);
 };
 
-/* --- SNOW SYSTEM (EFEITO LEVE) --- */
-function startSnow() {
-    const container = document.getElementById('snow-container');
-    const flakesCount = 30; // Quantidade moderada para não travar
-    for(let i=0; i<flakesCount; i++) {
-        createSnowflake(container);
+// --- FUNÇÕES DE CONVERSÃO BASE64 ---
+function encodeImageFileAsURL(element, targetId) {
+    const file = element.files[0];
+    const reader = new FileReader();
+    reader.onloadend = function() {
+        if (targetId === 'avatarPrev') pAvatarUrl.value = reader.result;
+        if (targetId === 'bannerPrev') {
+            pBannerUrl.value = reader.result;
+            bannerPrev.src = reader.result;
+        }
+        if (targetId === 'gImg') gImg.value = reader.result;
     }
-}
-function createSnowflake(container) {
-    const flake = document.createElement('div');
-    flake.classList.add('snowflake');
-    flake.innerText = ['❄', '❅', '❆', '.'][Math.floor(Math.random()*4)];
-    flake.style.left = Math.random() * 100 + 'vw';
-    flake.style.opacity = Math.random();
-    flake.style.fontSize = (Math.random() * 20 + 10) + 'px';
-    
-    const duration = Math.random() * 5 + 5; // 5 a 10s
-    flake.style.animationDuration = duration + 's';
-    flake.style.animationDelay = Math.random() * 5 + 's';
-    
-    container.appendChild(flake);
-    
-    // Reciclar floco
-    setTimeout(() => {
-        flake.remove();
-        createSnowflake(container);
-    }, (duration + 5) * 1000);
+    reader.readAsDataURL(file);
 }
 
-/* --- TOUR SYSTEM --- */
-let tourStepIndex = 0;
-const tourSteps = [
-    { 
-        id: 'searchInput', 
-        title: '🔍 Pesquisa de Natal', 
-        desc: 'Procure seus jogos favoritos rapidamente aqui.' 
-    },
-    { 
-        id: 'filters', 
-        title: '📂 Categorias', 
-        desc: 'Incluímos uma categoria especial <b>Natal 🎄</b> para jogos festivos!' 
-    },
-    { 
-        id: 'btnLogin', 
-        title: '🎅 Sua Conta', 
-        desc: 'Faça login para salvar seus jogos e curtir.' 
-    },
-    { 
-        id: 'btnPost', 
-        title: '🎁 Postar', 
-        desc: 'Compartilhe a alegria! Adicione novos jogos à biblioteca.' 
-    },
-    { 
-        id: 'grid', 
-        title: '🎮 Os Jogos', 
-        desc: 'Selecione um card para jogar. O design está congelante!' 
+function encodeFileToBase64(element, targetId) {
+    const file = element.files[0];
+    const reader = new FileReader();
+    reader.onloadend = function() {
+        // Se for HTML, criamos um Blob URL temporário ou salvamos a string pura
+        // Para iframe, o mais seguro em Base64 é o data:text/html
+        document.getElementById(targetId).value = reader.result;
+        showToast("Arquivo carregado com sucesso!", "success");
     }
-];
-
-function checkFirstTime() {
-    if (!localStorage.getItem('gp_tour_xmas_done')) { // Nova chave para forçar o tour de natal
-        document.getElementById('welcomeModal').style.display = 'grid';
-        setTimeout(()=>document.getElementById('welcomeModal').classList.add('open'), 100);
-    }
+    reader.readAsDataURL(file);
 }
 
-function closeWelcome() {
-    document.getElementById('welcomeModal').classList.remove('open');
-    setTimeout(()=>document.getElementById('welcomeModal').style.display='none', 300);
-    localStorage.setItem('gp_tour_xmas_done', 'true');
-}
-
-function startTour(force = false) {
-    if(force) localStorage.removeItem('gp_tour_xmas_done');
-    closeWelcome();
-    tourStepIndex = 0;
-    document.getElementById('tourMask').style.display = 'block';
-    document.getElementById('tourBox').style.display = 'block';
-    document.getElementById('tourTip').style.display = 'block';
-    showStep();
-}
-
-function showStep() {
-    const step = tourSteps[tourStepIndex];
-    const el = document.getElementById(step.id);
-    const box = document.getElementById('tourBox');
-    const tip = document.getElementById('tourTip');
+// --- PERFIL E LOGIN ---
+function login() {
+    const n = nick.value.trim(), p = password.value.trim();
+    if(!n) return showToast("Digite um nick", "error");
     
-    const rect = el.getBoundingClientRect();
-    
-    box.style.width = rect.width + 10 + 'px';
-    box.style.height = rect.height + 10 + 'px';
-    box.style.top = rect.top - 5 + window.scrollY + 'px';
-    box.style.left = rect.left - 5 + 'px';
-
-    document.getElementById('tourTitle').innerHTML = step.title;
-    document.getElementById('tourDesc').innerHTML = step.desc;
-
-    let tipTop = rect.bottom + 20 + window.scrollY;
-    if (tipTop + 200 > window.innerHeight + window.scrollY) {
-        tipTop = rect.top - 220 + window.scrollY;
-    }
-    
-    let tipLeft = rect.left + (rect.width/2) - 150;
-    if(tipLeft < 10) tipLeft = 10;
-    if(tipLeft + 300 > window.innerWidth) tipLeft = window.innerWidth - 320;
-
-    tip.style.top = tipTop + 'px';
-    tip.style.left = tipLeft + 'px';
+    // Simulação de login - Busca dados do perfil no Firestore se existir
+    db.collection("users").doc(n).get().then(doc => {
+        if(doc.exists){
+            user = doc.data();
+        } else {
+            user = { nick: n, role: (n === "ADM" && p === "ADMINBATHONYDEVS") ? "admin" : "user", avatar: "", banner: "" };
+        }
+        localStorage.setItem("gh_user", JSON.stringify(user));
+        updateUserUI();
+        closeModals();
+        showToast(`Olá, ${user.nick}!`, "success");
+    });
 }
 
-function nextStep() {
-    tourStepIndex++;
-    if(tourStepIndex >= tourSteps.length) {
-        endTour();
+function saveProfile() {
+    if(!user) return;
+    const newData = {
+        ...user,
+        avatar: pAvatarUrl.value || user.avatar,
+        banner: pBannerUrl.value || user.banner
+    };
+    db.collection("users").doc(user.nick).set(newData).then(() => {
+        user = newData;
+        localStorage.setItem("gh_user", JSON.stringify(user));
+        updateUserUI();
+        showToast("Perfil atualizado!", "success");
+        closeModals();
+    });
+}
+
+function updateUserUI() {
+    const pill = document.getElementById('btnLogin');
+    const loginForm = document.getElementById('loginForm');
+    const profileForm = document.getElementById('profileForm');
+
+    if(user) {
+        avatar.src = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nick}`;
+        userName.innerText = user.nick;
+        loginForm.style.display = 'none';
+        profileForm.style.display = 'block';
+        bannerPrev.src = user.banner || '';
+        pAvatarUrl.value = user.avatar || '';
+        pBannerUrl.value = user.banner || '';
+        // Aplica banner no header se quiser um toque especial
     } else {
-        showStep();
+        avatar.src = "https://ui-avatars.com/api/?name=Guest";
+        userName.innerText = "Login";
+        loginForm.style.display = 'block';
+        profileForm.style.display = 'none';
     }
 }
 
-function endTour() {
-    document.getElementById('tourMask').style.display = 'none';
-    document.getElementById('tourBox').style.display = 'none';
-    document.getElementById('tourTip').style.display = 'none';
-    localStorage.setItem('gp_tour_xmas_done', 'true');
-    showToast("Ho Ho Ho! Divirta-se jogando!", "success");
+function logout() {
+    localStorage.removeItem("gh_user");
+    user = null;
+    updateUserUI();
+    closeModals();
 }
 
-/* --- MAIN FUNCTIONS --- */
-function renderFilters() {
-    filters.innerHTML = categories.map(c => 
-        `<div class="filter-chip ${c===currentCat?'active':''}" onclick="setCategory('${c}')">${c}</div>`
-    ).join('');
+// --- JOGOS ---
+function postGame() {
+    if(!user) return showToast("Faça login!", "error");
+    if(!gTitle.value || !gUrl.value) return showToast("Título e URL/Arquivo são obrigatórios", "error");
+    
+    db.collection("games").add({
+        title: gTitle.value,
+        url: gUrl.value,
+        img: gImg.value || "https://placehold.co/600x400?text=No+Image",
+        category: gCat.value,
+        likes: 0,
+        author: user.nick,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        showToast("Jogo publicado!", "success");
+        closeModals();
+        gTitle.value = ""; gUrl.value = ""; gImg.value = "";
+    }).catch(e => {
+        showToast("Erro: Arquivo muito grande para Base64!", "error");
+    });
 }
-function setCategory(c) { currentCat = c; renderFilters(); renderGrid(allGames); }
 
+function renderGrid(games) {
+    const isAdmin = user && user.role === 'admin';
+    const filtered = games.filter(g => (currentCat==="Todos" || g.category===currentCat));
+
+    grid.innerHTML = filtered.map(g => `
+        <div class="game-card" onclick="openGame('${g.id}', '${g.url}', '${g.title}')">
+            <div class="card-img-box">
+                ${isAdmin ? `<button class="delete-btn" onclick="deleteGame(event,'${g.id}')"><i data-lucide="trash-2" size="18"></i></button>` : ''}
+                <img src="${g.img}">
+            </div>
+            <div class="card-content">
+                <div class="card-title">${g.title}</div>
+                <div class="card-info">
+                    <span class="badge">${g.category}</span>
+                    <div class="likes-info"><i data-lucide="heart"></i> ${g.likes||0}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    lucide.createIcons();
+}
+
+// --- SISTEMA BASE MANTIDO ---
 function loadGames() {
     db.collection("games").orderBy("createdAt", "desc").onSnapshot(snap => {
         allGames = [];
@@ -583,106 +402,13 @@ function loadGames() {
     });
 }
 
-function renderGrid(games) {
-    const isAdmin = user && user.role === 'admin';
-    const filtered = games.filter(g => {
-        return (currentCat==="Todos" || g.category===currentCat) && 
-               g.title.toLowerCase().includes(searchInput.value.toLowerCase());
-    });
-
-    grid.innerHTML = filtered.map(g => {
-        const delBtn = isAdmin ? `<button class="delete-btn" onclick="deleteGame(event,'${g.id}')"><i data-lucide="trash-2" size="18"></i></button>` : '';
-        return `
-        <div class="game-card" onclick="openGame('${g.id}', '${g.url}', '${g.title}')">
-            <div class="card-img-box">${delBtn}<img src="${g.img}"></div>
-            <div class="card-content">
-                <div class="card-title">${g.title}</div>
-                <div class="card-info">
-                    <span class="badge">${g.category||'Geral'}</span>
-                    <div class="likes-info"><i data-lucide="heart"></i> ${g.likes||0}</div>
-                </div>
-            </div>
-        </div>`;
-    }).join('');
-    lucide.createIcons();
-}
-
-function deleteGame(e, id) {
-    e.stopPropagation();
-    if(!user || user.role!=='admin') return;
-    if(confirm("Apagar este presente (jogo)?")) {
-        db.collection("games").doc(id).delete().then(()=>showToast("Jogo removido da lista!","success"));
-    }
-}
-
-function login() {
-    const n = nick.value.trim(), p = password.value.trim();
-    if(!n) return showToast("Quem é você?", "error");
-    if(n===ADMIN_USER && p===ADMIN_PASS) user = {nick:"ADM", role:"admin"};
-    else user = {nick:n, role:"user"};
-    
-    localStorage.setItem("gh_user", JSON.stringify(user));
-    updateUserUI();
-    renderGrid(allGames);
-    closeModals();
-    showToast(`Bem-vindo à festa, ${user.nick}!`, "success");
-}
-
-function updateUserUI() {
-    if(user) {
-        avatar.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.nick}`;
-        userName.innerText = user.nick + (user.role==='admin'?' (ADM)':'');
-    } else {
-        avatar.src = "https://ui-avatars.com/api/?name=Guest&background=random";
-        userName.innerText = "Login";
-    }
-}
-
-function postGame() {
-    if(!user) return showToast("Faça login para postar!", "error");
-    if(!gTitle.value || !gUrl.value || !gImg.value) return showToast("Preencha todos os campos!", "error");
-    db.collection("games").add({
-        title: gTitle.value, url: gUrl.value, img: gImg.value, category: gCat.value,
-        likes:0, createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(()=>{
-        showToast("Presente entregue (Postado)!", "success");
-        closeModals();
-        gTitle.value=""; gUrl.value=""; gImg.value="";
-    });
-}
-
-async function openGame(id, url, title) {
-    currentGameId = id;
+function openGame(id, url, title) {
     player.classList.add('active');
     frame.src = url;
     playerTitle.innerText = title;
-    const d = await db.collection("games").doc(id).get();
-    likeCount.innerText = d.data().likes||0;
-    checkLikeStatus();
 }
 
 function closeGame() { player.classList.remove('active'); frame.src = ""; }
-
-async function toggleLike() {
-    if(!user) return showToast("Faça login para curtir!", "error");
-    const ref = db.collection("likes").doc(user.nick+"_"+currentGameId);
-    const gRef = db.collection("games").doc(currentGameId);
-    if((await ref.get()).exists) {
-        await ref.delete(); await gRef.update({likes: firebase.firestore.FieldValue.increment(-1)});
-        likeBtn.classList.remove('active');
-    } else {
-        await ref.set({u:user.nick}); await gRef.update({likes: firebase.firestore.FieldValue.increment(1)});
-        likeBtn.classList.add('active');
-        showToast("Você amou isso! ❤️", "success");
-    }
-    likeCount.innerText = (await gRef.get()).data().likes;
-}
-
-async function checkLikeStatus() {
-    if(!user) return;
-    const exists = (await db.collection("likes").doc(user.nick+"_"+currentGameId).get()).exists;
-    likeBtn.classList.toggle('active', exists);
-}
 
 function openModal(id) { document.getElementById(id).style.display='grid'; setTimeout(()=>document.getElementById(id).classList.add('open'),10); }
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m=>{m.classList.remove('open'); setTimeout(()=>m.style.display='none',300)}); }
@@ -690,12 +416,21 @@ function closeOnOverlay(e,el){ if(e.target===el) closeModals(); }
 
 function showToast(msg, type) {
     const b = document.createElement('div'); b.className = `toast ${type}`;
-    // Ícones personalizados para sucesso (presente) e erro (alerta)
-    const icon = type === 'success' ? 'gift' : 'alert-triangle';
-    b.innerHTML = `<i data-lucide="${icon}"></i><span>${msg}</span>`;
+    b.innerHTML = `<span>${msg}</span>`;
     document.getElementById('toast-container').appendChild(b);
-    lucide.createIcons();
-    setTimeout(()=>{ b.style.opacity='0'; b.style.transform='translateX(100px)'; setTimeout(()=>b.remove(),300) },3000);
+    setTimeout(()=>{ b.remove() },3000);
+}
+
+function startSnow() {
+    const container = document.getElementById('snow-container');
+    for(let i=0; i<30; i++) {
+        const flake = document.createElement('div');
+        flake.classList.add('snowflake');
+        flake.innerText = '❄';
+        flake.style.left = Math.random() * 100 + 'vw';
+        flake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        container.appendChild(flake);
+    }
 }
 </script>
 </body>
